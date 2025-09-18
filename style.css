@@ -1,0 +1,20 @@
+body{
+    background-color: rgba(2, 1, 44, 1); 
+    font-family: 'Rubik', sans-serif;
+    color: #ef4444; 
+}
+.forecast{
+    background-color: rgba(38, 37, 64, 1);
+}
+.first,
+.second,
+.third,
+.fourth,
+.fifth,
+.sixth,
+.seventh,
+.eighth{
+    background-color: rgba(48, 47, 74, 1);
+}
+
+    

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
 
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-
+<link rel="stylesheet" href="style.css">
    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   
   <title>Frontend Mentor | Weather app</title>
@@ -16,7 +16,7 @@
     .attribution a { color: hsl(228, 45%, 44%); }
   </style> -->
 </head>
-<body class="bg-blue-800 font-rubik text-red-500 ">
+<body class="bg-neutral-900 font-rubik text-red-500 ">
 
   <nav>
     <!-- LOGO -->
@@ -63,7 +63,7 @@
 <!-- CURRENT WEATHER -->
   <section class="mb-4 ml-10">
     
-    <div class="bg-blue-500  text-white p-4 pt-15 pb-15 rounded-xl shadow flex items-center justify-between w-1/2">
+    <div class="bg-blue-700  text-white p-4 pt-15 pb-15 rounded-xl shadow flex items-center justify-between w-1/2">
      <div>
        <p class="text-lg">Berlin, Germany</p>
        <p>Sunday, 10th October, 2025.</p>
@@ -141,53 +141,53 @@
 
   </div>
   <!-- HOURLY FORECAST -->
-  <section class="ml-10 border p-5 rounded-xl shadow h-fit">
-    <h2 class="text-xl font-semibold mb-2">Hourly Forecast</h2>
-    <div class="flex flex-col space-y-4 overflow-x-auto">
+  <section class="forecast ml-10 p-5 rounded-xl shadow h-fit ">
+    <h2 class="text-xl text-white font-semibold mb-2">Hourly Forecast</h2>
+    <div class=" flex flex-col space-y-4 overflow-x-auto">
       <!-- FIRST -->
-      <div class="bg-neutral-600  p-2 rounded-lg shadow text-center w-80 h-fit flex-shrink-0 flex flex-row">
+      <div class="first bg-neutral-600  p-2 rounded-lg shadow text-center w-80 h-fit flex-shrink-0 flex flex-row">
         <p class="font-bold">1 PM</p>
         <img src="assets/images/icon-sunny.wep" alt="Sunny Icon" class="mx-auto">
         <p>25°C</p>
       </div>
       <!-- SECOND -->
-      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+      <div class="second bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">2 PM</p>
         <img src="assets/images/icon-partly-cloudy.wep" alt="Cloudy Icon" class="mx-auto">
         <p>24°C</p>
       </div>
       <!-- THIRD -->
-      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+      <div class="third bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">3 PM</p>
         <img src="assets/images/icon-rain.wep" alt="Rainy Icon" class="mx-auto">
         <p>22°C</p>
       </div>
       <!-- FOURTH -->
-      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+      <div class="fourth bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">4 PM</p>
         <img src="assets/images/icon-storm.wep" alt="Thunderstorm Icon" class="mx-auto">
         <p>21°C</p>
       </div>
       <!-- FIFTH -->
-      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+      <div class="fifth bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">5 PM</p>
         <img src="assets/images/icon-drizzle.wep" alt="Drizzle Icon" class="mx-auto">
         <p>20°C</p>
       </div>
       <!-- SIXTH -->
-      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+      <div class="sixth bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">6 PM</p>
         <img src="assets/images/icon-fog.wep" alt="Fog Icon" class="mx-auto">
         <p>19°C</p>
       </div>
       <!-- SEVENTH -->
-       <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+       <div class="seventh bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">7 PM</p>
         <img src="assets/images/icon-snow.wep" alt="Snow Icon" class="mx-auto">
         <p>18°C</p>
       </div>
-        <!-- EIGHTH -->
-       <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <!-- EIGHT -->
+       <div class="eight bg-neutral-600 p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
         <p class="font-bold">8 PM</p>
         <img src="assets/images/icon-snow.wep" alt="Snow Icon" class="mx-auto">
         <p>18°C</p>
