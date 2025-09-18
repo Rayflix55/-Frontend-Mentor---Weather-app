@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <title>Frontend Mentor | Weather app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <!-- <style>
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+  </style> -->
+</head>
+<body class="bg-blue-500 font-rubik text-red-500">
+
+ <main class="container mx-auto p-4">
+
+  <header class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Weather App</h1>
+    <button class="bg-white text-blue-500 px-4 py-2 rounded">Toggle Theme</button>
+  </header>
+
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Current Weather</h2>
+    <div class="bg-white p-4 rounded shadow ">
+      <p class="text-lg">City Name</p>
+      <p class="text-5xl font-bold">25°C</p>
+      <p class="text-sm">Sunny</p>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Today's Highlights</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-bold">Humidity</p>
+        <p>60%</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-bold">Wind Speed</p>
+        <p>15 km/h</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-bold">Visibility</p>
+        <p>10 km</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-bold">Air Pressure</p>
+        <p>1015 hPa</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add more sections as needed -->
+
+  <!-- Placeholder for additional content -->
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Units</h2>
+    <div class="flex flex-col">
+      <label class="mb-2">
+        <input type="radio" name="unit" value="metric" checked>
+        Metric
+      </label>
+      <label>
+        <input type="radio" name="unit" value="imperial">
+        Imperial
+      </label>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Temperature</h2>
+    <div class="flex flex-col">
+      <label class="mb-2">
+        <input type="radio" name="temp" value="celsius" checked>
+        Celsius (°C)
+      </label>
+      <label>
+        <input type="radio" name="temp" value="fahrenheit">
+        Fahrenheit (°F)
+      </label>
+    </div>
+  </section>
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Wind Speed</h2>
+    <div class="flex flex-col">
+      <label class="mb-2">
+        <input type="radio" name="wind" value="kmh" checked>
+        km/h
+      </label>
+      <label>
+        <input type="radio" name="wind" value="mph">
+        mph
+      </label>
+    </div>
+  </section>
+  <section class="mb-4">
+    <h2 class="text-xl font-semibold mb-2">Precipitation</h2>
+    <div class="flex flex-col">
+      <label class="mb-2">
+        <input type="radio" name="precip" value="mm" checked>
+        Millimeters (mm)
+      </label>
+      <label>
+        <input type="radio" name="precip" value="in">
+        Inches (in)
+      </label>
+    </div>
+  </section>
+
+ 
+ </main>
+
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div>
+</body>
+</html>
