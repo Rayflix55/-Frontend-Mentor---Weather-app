@@ -40,7 +40,10 @@
   </nav>
 
  <main class="container mx-auto  ">
-  <!-- HEADER -->
+
+  
+ <section>
+   <!-- HEADER -->
   <header class=" pb-10 pt-5  flex justify-center">
     <h1 class="text-5xl font-bold ">How's the sky looking today?</h1>
   </header>
@@ -53,8 +56,11 @@
     <button type="submit" ref="search"
      class="bg-white text-blue-500 p-2 rounded-lg w-24 hover:bg-blue-500 hover:text-white">Search</button>
   </section>
-
-  <!-- CURRENT WEATHER -->
+    <!-- THIS SECTION TAG IS TO HELP FLEX HORIZONTALLY WITH THE HOURLY FORECAST AT THE END OF THE CODE -->
+<section class="flex flex-row">
+  <!-- THIS IS THE PARENT DIV OF THE SECTION I WANT TO FLEX -->
+  <div>
+<!-- CURRENT WEATHER -->
   <section class="mb-4 ml-10">
     
     <div class="bg-blue-500  text-white p-4 pt-15 pb-15 rounded-xl shadow flex items-center justify-between w-1/2">
@@ -69,7 +75,7 @@
     </div>
   </section>
   <!-- TODAY'S HIGHLIGHTS -->
-  <section class="mb-4 ">
+  <section class="mb-4 ml-10">
     <h2 class="text-xl font-semibold mb-2">Today's Highlights</h2>
     <div class="flex flex-row space-x-6">
       <div class="bg-white p-4 rounded-xl shadow w-32 ">
@@ -92,7 +98,7 @@
   </section>
 
   <!-- DAILY FORECAST -->
-  <section class="#">
+  <section class="ml-10">
     <h2 class="text-xl font-semibold mb-2">Daily Forecast</h2>
     <div class="flex flex-row space-x-4">
       <div class="bg-white p-4 rounded-xl shadow text-center size-20 h-fit ml-2">
@@ -131,8 +137,64 @@
         <p>27°C</p>
       </div>
     </div>
+ </section>
 
-  </main>
+  </div>
+  <!-- HOURLY FORECAST -->
+  <section class="ml-10 border p-5 rounded-xl shadow h-fit">
+    <h2 class="text-xl font-semibold mb-2">Hourly Forecast</h2>
+    <div class="flex flex-col space-y-4 overflow-x-auto">
+      <!-- FIRST -->
+      <div class="bg-neutral-600  p-2 rounded-lg shadow text-center w-80 h-fit flex-shrink-0 flex flex-row">
+        <p class="font-bold">1 PM</p>
+        <img src="assets/images/icon-sunny.wep" alt="Sunny Icon" class="mx-auto">
+        <p>25°C</p>
+      </div>
+      <!-- SECOND -->
+      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">2 PM</p>
+        <img src="assets/images/icon-partly-cloudy.wep" alt="Cloudy Icon" class="mx-auto">
+        <p>24°C</p>
+      </div>
+      <!-- THIRD -->
+      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">3 PM</p>
+        <img src="assets/images/icon-rain.wep" alt="Rainy Icon" class="mx-auto">
+        <p>22°C</p>
+      </div>
+      <!-- FOURTH -->
+      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">4 PM</p>
+        <img src="assets/images/icon-storm.wep" alt="Thunderstorm Icon" class="mx-auto">
+        <p>21°C</p>
+      </div>
+      <!-- FIFTH -->
+      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">5 PM</p>
+        <img src="assets/images/icon-drizzle.wep" alt="Drizzle Icon" class="mx-auto">
+        <p>20°C</p>
+      </div>
+      <!-- SIXTH -->
+      <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">6 PM</p>
+        <img src="assets/images/icon-fog.wep" alt="Fog Icon" class="mx-auto">
+        <p>19°C</p>
+      </div>
+      <!-- SEVENTH -->
+       <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">7 PM</p>
+        <img src="assets/images/icon-snow.wep" alt="Snow Icon" class="mx-auto">
+        <p>18°C</p>
+      </div>
+        <!-- EIGHTH -->
+       <div class="bg-white p-2 rounded-xl shadow text-center w-80 flex-shrink-0 flex flex-row h-fit">
+        <p class="font-bold">8 PM</p>
+        <img src="assets/images/icon-snow.wep" alt="Snow Icon" class="mx-auto">
+        <p>18°C</p>
+      </div>
+    </div>
+  </section>
+</section>
 
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
