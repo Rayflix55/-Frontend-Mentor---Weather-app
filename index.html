@@ -48,9 +48,10 @@
     <h1 class="text-5xl font-bold ">How's the sky looking today?</h1>
   </header>
   <!-- SEARCH BAR -->
-  <section class="flex justify-center mb-5">
+  <section class=" flex justify-center mb-5">
     <form class=" flex items-center" onsubmit="handleSearch(event)">
-      <div class="relative">
+    <search class="search-func flex  items-center">
+  <div class="relative">
         <input 
           type="text" 
           id="searchInput"
@@ -66,9 +67,11 @@
       &nbsp;&nbsp;&nbsp;
       <button 
         type="submit"
-        class="bg-orange-500 text-blue-900 p-2 rounded-xl w-24 hover:bg-blue-800 hover:text-white transform transition duration-200 ease-in-out active:scale-95">
+        class="button bg-orange-500 text-blue-900 p-2 rounded-xl w-24 hover:bg-blue-800 hover:text-white transform transition duration-200 ease-in-out active:scale-95">
         Search
       </button>
+
+    </search>
     </form>
   </section>
 <section class="flex flex-row justify-center">
