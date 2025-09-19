@@ -18,9 +18,13 @@ text-align: center;
     66% { color: blue; }
     100% { color: white; }
 }
-/* .relative{
+.relative{
     background-image:url(assets/images/bg-today-small.svg) ;
-} */
+    background-repeat: no-repeat;
+    background-position: center;
+   background-size: cover;
+   border-radius: 10px;
+}
 .current{
    background-image:url(assets/images/bg-today-large.svg) ;
         
