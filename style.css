@@ -1,36 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Agbalumo&family=Dancing+Script:wght@400..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Agbalumo&family=Dancing+Script:wght@400..700&display=swap");
 
-body{
-    background-color: rgba(2, 1, 44, 1); 
+body {
+  background-color: rgba(2, 1, 44, 1);
   font-family: "Agbalumo", system-ui;
   font-weight: 400;
-    color: whitesmoke; 
+  color: whitesmoke;
 }
-header{
-animation: headerGlow 3s infinite;
-padding: 2rem;
-text-align: center;
+header {
+  animation: headerGlow 3s infinite;
+  padding: 2rem;
+  text-align: center;
 }
 
 @keyframes headerGlow {
-    0% { color: white; }
-    33% { color: orange; }
-    66% { color: blue; }
-    100% { color: white; }
+  0% {
+    color: white;
+  }
+  33% {
+    color: orange;
+  }
+  66% {
+    color: blue;
+  }
+  100% {
+    color: white;
+  }
 }
-.relative{
-    background-image:url(assets/images/bg-today-small.svg) ;
-    background-repeat: no-repeat;
-    background-position: center;
-   background-size: cover;
-   border-radius: 10px;
+.relative {
+  background-image: url(assets/images/bg-today-small.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
 }
-.current{
-   background-image:url(assets/images/bg-today-large.svg) ;
-        
+.current {
+  background-image: url(assets/images/bg-today-large.svg);
 }
-.forecast{
-    background-color: rgba(38, 37, 64, 1);
+.forecast {
+  background-color: rgba(38, 37, 64, 1);
 }
 /* TODAYS HIGHLIGHT SECTION */
 .humidity,
@@ -53,9 +60,58 @@ text-align: center;
 .wed,
 .thu,
 .fri,
-.sat
-{
-    background-color: rgba(48, 47, 74, 1);
+.sat {
+  background-color: rgba(48, 47, 74, 1);
+}
+.attribution {
+  padding: 2rem;
+}
+.attribution a {
+  animation: headerGlow 3s infinite;
 }
 
-    
+@keyframes headerGlow {
+  0% {
+    color: white;
+  }
+  33% {
+    color: orange;
+  }
+  66% {
+    color: blue;
+  }
+  100% {
+    color: white;
+  }
+}
+
+/* MEDIA QUERIES */
+@media screen and (min-width: 330px) and (max-width: 450px) {
+    .relative {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .forecast {
+        padding: 0.5rem;
+        margin: 0.5rem;
+    }
+
+    .humidity,
+    .wind,
+    .uv,
+    .feel {
+        margin: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    header {
+        padding: 1rem;
+        font-size: 0.9em;
+    }
+
+    .attribution {
+        padding: 1rem;
+        font-size: 0.8em;
+    }
+}
