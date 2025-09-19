@@ -1,11 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&family=Dancing+Script:wght@400..700&display=swap');
+
 body{
     background-color: rgba(2, 1, 44, 1); 
-    font-family: 'Rubik', sans-serif;
-    color: #ef4444; 
+  font-family: "Agbalumo", system-ui;
+  font-weight: 400;
+    color: whitesmoke; 
+}
+header{
+animation: headerGlow 3s infinite;
+padding: 2rem;
+text-align: center;
+}
+
+@keyframes headerGlow {
+    0% { color: white; }
+    33% { color: orange; }
+    66% { color: blue; }
+    100% { color: white; }
+}
+/* .relative{
+    background-image:url(assets/images/bg-today-small.svg) ;
+} */
+.current{
+   background-image:url(assets/images/bg-today-large.svg) ;
+        
 }
 .forecast{
     background-color: rgba(38, 37, 64, 1);
 }
+/* TODAYS HIGHLIGHT SECTION */
+.humidity,
+.wind,
+.uv,
+.feel, 
+/* HOURLY FORECAST SECTION */
 .first,
 .second,
 .third,
@@ -13,7 +41,16 @@ body{
 .fifth,
 .sixth,
 .seventh,
-.eighth{
+.eight,
+/* DAILY FORECAST SECTION */
+.sun,
+.mon,
+.tue,
+.wed,
+.thu,
+.fri,
+.sat
+{
     background-color: rgba(48, 47, 74, 1);
 }
 
