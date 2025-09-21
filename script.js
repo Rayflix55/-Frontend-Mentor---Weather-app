@@ -84,13 +84,120 @@ console.log('🧪 Test - Temperature 25°C:', formatTemperature(25));
 console.log('🧪 Test - Wind speed 15 km/h:', formatWindSpeed(15));
 
 // ================================
-// CHUNK 2: SEARCH FUNCTIONALITY
+// CHUNK 2: SEARCH + AUTO GEOLOCATION (WORKING VERSION)
 // ================================
 
-// EXPLANATION: This function handles your search form submission
-// It connects to your existing handleSearch(event) in the HTML form
+// EXPLANATION: Auto-detect user location when page loads
+function initializeWeatherApp() {
+    console.log('🚀 Starting Weather App...');
+    
+    // Try to get user's current location automatically
+    if (navigator.geolocation) {
+        console.log('📍 Geolocation supported, requesting permission...');
+        
+        // Show loading message
+        updateLocationDisplay('🔄 Detecting your location...', '');
+        
+        navigator.geolocation.getCurrentPosition(
+            // SUCCESS: Got user's location
+            function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                console.log('✅ Got coordinates:', latitude, longitude);
+                updateLocationDisplay('📍 Found your location!', 'Getting weather data...');
+                
+                // Convert coordinates to city name and get weather
+                reverseGeocode(latitude, longitude);
+            },
+            
+            // ERROR: Couldn't get location
+            function(error) {
+                console.warn('⚠️ Geolocation error:', error.message);
+                
+                let errorMessage;
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Location access denied. You can search manually above.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Location unavailable. Please search for your city above.";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Location timeout. Please search for your city above.";
+                        break;
+                    default:
+                        errorMessage = "Location error. Please search for your city above.";
+                        break;
+                }
+                
+                updateLocationDisplay('🔍 Search for your city', errorMessage);
+            },
+            
+            // OPTIONS: Location settings
+            {
+                enableHighAccuracy: true,  // Use GPS if available
+                timeout: 10000,           // Wait up to 10 seconds
+                maximumAge: 300000        // Use cached location up to 5 minutes old
+            }
+        );
+    } else {
+        console.warn('❌ Geolocation not supported');
+        updateLocationDisplay('🔍 Search for your city', 'Geolocation not supported by your browser');
+    }
+}
+
+// EXPLANATION: Convert GPS coordinates to city/state/country
+function reverseGeocode(latitude, longitude) {
+    // Use geocoding API to get location details from coordinates
+    const reverseUrl = `https://geocoding-api.open-meteo.com/v1/search?latitude=${latitude}&longitude=${longitude}&count=1&language=en&format=json`;
+    
+    console.log('🌍 Reverse geocoding:', reverseUrl);
+    
+    fetch(reverseUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Reverse geocoding result:', data);
+            
+            if (data.results && data.results.length > 0) {
+                const location = data.results[0];
+                console.log('✅ Found location details:', location);
+                
+                weatherApp.currentLocation = location;
+                fetchWeatherData(location);
+            } else {
+                // If reverse geocoding fails, use coordinates directly
+                console.log('📍 Using coordinates directly');
+                const fallbackLocation = {
+                    name: 'Your Location',
+                    country: '',
+                    admin1: '', // State/Province
+                    latitude: latitude,
+                    longitude: longitude
+                };
+                weatherApp.currentLocation = fallbackLocation;
+                fetchWeatherData(fallbackLocation);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Reverse geocoding error:', error);
+            
+            // Still try to get weather with coordinates
+            const fallbackLocation = {
+                name: 'Your Location',
+                country: '',
+                admin1: '',
+                latitude: latitude,
+                longitude: longitude
+            };
+            weatherApp.currentLocation = fallbackLocation;
+            fetchWeatherData(fallbackLocation);
+        });
+}
+
+// EXPLANATION: Manual search function (when user types city)
 function handleSearch(event) {
-    event.preventDefault(); // Stop form from refreshing the page
+    event.preventDefault();
     
     const searchInput = document.getElementById('searchInput');
     const query = searchInput.value.trim();
@@ -100,33 +207,22 @@ function handleSearch(event) {
         return;
     }
     
-    console.log('🔍 Searching for:', query);
-    
-    // Show loading state
+    console.log('🔍 Manual search for:', query);
     showSearchLoading();
-    
-    // Search for the city and get weather data
     searchCity(query);
 }
 
-// EXPLANATION: Search for a city using the geocoding API
-// This converts city name to coordinates (latitude, longitude)
+// EXPLANATION: Search for city by name
 function searchCity(cityName) {
     const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`;
     
     fetch(geocodingUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('City search failed');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.results && data.results.length > 0) {
                 const location = data.results[0];
-                console.log('🌍 Found city:', location.name, location.country);
+                console.log('✅ Found city:', location);
                 
-                // Store the location and get weather data
                 weatherApp.currentLocation = location;
                 fetchWeatherData(location);
             } else {
@@ -136,41 +232,37 @@ function searchCity(cityName) {
         .catch(error => {
             console.error('❌ Search error:', error);
             hideSearchLoading();
-            alert(`Sorry, couldn't find "${cityName}". Please try a different city name.`);
+            alert(`Sorry, couldn't find "${cityName}". Please try a different city.`);
         });
 }
 
-// EXPLANATION: Get weather data using coordinates
-// This gets current weather, hourly forecast, and daily forecast
+// EXPLANATION: Get weather data (SIMPLE & RELIABLE VERSION)
 function fetchWeatherData(location) {
-    // Build the weather API URL with all the data we need
+    console.log('🌤️ Fetching weather for:', location);
+    
+    // Simple, reliable weather API call
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?` +
         `latitude=${location.latitude}&longitude=${location.longitude}&` +
         `current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&` +
-        `hourly=temperature_2m,weather_code&` +
         `daily=weather_code,temperature_2m_max,temperature_2m_min&` +
-        `timezone=auto&` +
-        `temperature_unit=${weatherApp.units === 'imperial' ? 'fahrenheit' : 'celsius'}&` +
-        `wind_speed_unit=${weatherApp.units === 'imperial' ? 'mph' : 'kmh'}`;
+        `hourly=temperature_2m,weather_code&` +
+        `timezone=auto`;
     
     fetch(weatherUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Weather data fetch failed');
+                throw new Error(`API Error: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('🌤️ Weather data received:', data);
+            console.log('✅ Weather data received:', data);
             
-            // Store weather data
             weatherApp.weatherData = data;
             
-            // Update your HTML elements with the real weather data
+            // Update all UI elements
             updateCurrentWeather(data, location);
             updateTodaysHighlights(data);
-            updateDailyForecast(data);
-            updateHourlyForecast(data);
             
             hideSearchLoading();
         })
@@ -181,18 +273,32 @@ function fetchWeatherData(location) {
         });
 }
 
-// EXPLANATION: Update your current weather section (the blue box)
+// EXPLANATION: Update current weather display with enhanced location info
 function updateCurrentWeather(weatherData, location) {
     const current = weatherData.current;
+    if (!current) return;
     
-    // Update location name (your existing element)
-    const locationElement = document.querySelector('.current p:first-child');
+    // ENHANCED LOCATION DISPLAY: Show city, state, country
+    const locationElement = document.querySelector('.current div p:first-child');
     if (locationElement) {
-        locationElement.textContent = `${location.name}, ${location.country}`;
+        let locationText = location.name;
+        
+        // Add state/province if available
+        if (location.admin1 && location.admin1 !== location.name) {
+            locationText += `, ${location.admin1}`;
+        }
+        
+        // Add country
+        if (location.country) {
+            locationText += `, ${location.country}`;
+        }
+        
+        locationElement.textContent = locationText;
+        console.log('✅ Updated location:', locationText);
     }
     
-    // Update date
-    const dateElement = document.querySelector('.current p:nth-child(2)');
+    // Update current date
+    const dateElement = document.querySelector('.current div p:nth-child(2)');
     if (dateElement) {
         const now = new Date();
         const options = { 
@@ -206,7 +312,7 @@ function updateCurrentWeather(weatherData, location) {
     
     // Update weather description
     const weatherInfo = getWeatherInfo(current.weather_code);
-    const descriptionElement = document.querySelector('.current p:nth-child(3)');
+    const descriptionElement = document.querySelector('.current p:nth-child(2)');
     if (descriptionElement) {
         descriptionElement.textContent = weatherInfo.description;
     }
@@ -214,30 +320,26 @@ function updateCurrentWeather(weatherData, location) {
     // Update temperature
     const tempElement = document.querySelector('.current p:last-child');
     if (tempElement) {
-        const temp = weatherApp.units === 'imperial' ? 
-            Math.round((current.temperature_2m * 9/5) + 32) + '°F' : 
-            Math.round(current.temperature_2m) + '°C';
-        tempElement.textContent = temp;
+        const temp = Math.round(current.temperature_2m);
+        tempElement.textContent = `${temp}°C`;
     }
 }
 
-// EXPLANATION: Update the "Today's Highlights" section
+// EXPLANATION: Update today's highlights
 function updateTodaysHighlights(weatherData) {
     const current = weatherData.current;
+    if (!current) return;
     
     // Update Humidity
     const humidityElement = document.querySelector('.humidity p:last-child');
     if (humidityElement) {
-        humidityElement.textContent = current.relative_humidity_2m + '%';
+        humidityElement.textContent = Math.round(current.relative_humidity_2m) + '%';
     }
     
     // Update Wind Speed
     const windElement = document.querySelector('.wind p:last-child');
     if (windElement) {
-        const windSpeed = weatherApp.units === 'imperial' ? 
-            Math.round(current.wind_speed_10m * 0.621371) + ' mph' :
-            Math.round(current.wind_speed_10m) + ' km/h';
-        windElement.textContent = windSpeed;
+        windElement.textContent = Math.round(current.wind_speed_10m) + ' km/h';
     }
     
     // Update UV Index
@@ -246,35 +348,433 @@ function updateTodaysHighlights(weatherData) {
         uvElement.textContent = Math.round(current.uv_index || 0);
     }
     
-    // Update Feels Like temperature
+    // Update Feels Like
     const feelsLikeElement = document.querySelector('.feel p:last-child');
     if (feelsLikeElement) {
-        const feelsLike = weatherApp.units === 'imperial' ? 
-            Math.round((current.apparent_temperature * 9/5) + 32) + '°F' :
-            Math.round(current.apparent_temperature) + '°C';
-        feelsLikeElement.textContent = feelsLike;
+        const feelsLike = Math.round(current.apparent_temperature);
+        feelsLikeElement.textContent = `${feelsLike}°C`;
     }
 }
 
-// EXPLANATION: Show loading state when searching
+// EXPLANATION: Helper functions for loading states
+function updateLocationDisplay(location, description) {
+    const locationElement = document.querySelector('.current div p:first-child');
+    const descElement = document.querySelector('.current p:nth-child(2)');
+    
+    if (locationElement) locationElement.textContent = location;
+    if (descElement) descElement.textContent = description;
+}
+
 function showSearchLoading() {
     const submitButton = document.querySelector('button[type="submit"]');
     if (submitButton) {
         submitButton.textContent = 'Searching...';
         submitButton.disabled = true;
-        submitButton.style.opacity = '0.6';
     }
 }
 
-// EXPLANATION: Hide loading state after search completes
 function hideSearchLoading() {
     const submitButton = document.querySelector('button[type="submit"]');
     if (submitButton) {
         submitButton.textContent = 'Search';
         submitButton.disabled = false;
-        submitButton.style.opacity = '1';
     }
 }
 
-console.log('✅ Chunk 2: Search Functionality Complete');
-console.log('🔍 Your search form is now connected to real weather APIs');
+// EXPLANATION: Start the app when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 DOM loaded, initializing weather app...');
+    initializeWeatherApp();
+});
+
+console.log('✅ Chunk 2: Search + Auto Geolocation Ready');
+console.log('📱 Will auto-detect location when page loads');
+
+// ================================
+// CHUNK 3: DAILY FORECAST (FIXED VERSION)
+// ================================
+
+// EXPLANATION: Fixed daily forecast that prevents duplicates and fits your cards
+function updateDailyForecast(weatherData) {
+    console.log('📅 Updating daily forecast (FIXED)...');
+    
+    const daily = weatherData.daily;
+    if (!daily || !daily.time) {
+        console.error('No daily forecast data available');
+        return;
+    }
+    
+    // Get all your forecast day elements
+    const dayElements = [
+        document.querySelector('.sun'),
+        document.querySelector('.mon'), 
+        document.querySelector('.tue'),
+        document.querySelector('.wed'),
+        document.querySelector('.thu'),
+        document.querySelector('.fri'),
+        document.querySelector('.sat')
+    ];
+    
+    console.log('📊 Available forecast days:', daily.time.length);
+    console.log('🗓️ Forecast dates:', daily.time);
+    
+    // FIX: Start from index 1 to skip today (since today is shown in current weather)
+    for (let i = 0; i < 7; i++) {
+        const dayElement = dayElements[i];
+        const dataIndex = i + 1; // Skip today, start from tomorrow
+        
+        if (!dayElement) {
+            console.warn(`Day element ${i} not found`);
+            continue;
+        }
+        
+        // Check if we have data for this day
+        if (dataIndex >= daily.time.length) {
+            console.warn(`No data for day ${dataIndex}`);
+            continue;
+        }
+        
+        // Get data for this day
+        const date = new Date(daily.time[dataIndex]);
+        const weatherCode = daily.weather_code[dataIndex];
+        const maxTemp = daily.temperature_2m_max[dataIndex];
+        const minTemp = daily.temperature_2m_min[dataIndex];
+        
+        // Get weather info
+        const weatherInfo = getWeatherInfo(weatherCode);
+        
+        // FIX: Use short day names that fit your cards
+        const dayNameElement = dayElement.querySelector('p:first-child');
+        if (dayNameElement) {
+            const dayName = getShortDayName(date, dataIndex);
+            dayNameElement.textContent = dayName;
+            console.log(`✅ Day ${i}: ${dayName} (${date.toLocaleDateString()})`);
+        }
+        
+        // Update weather icon
+        const iconElement = dayElement.querySelector('img');
+        if (iconElement) {
+            iconElement.src = weatherInfo.icon;
+            iconElement.alt = weatherInfo.description;
+        }
+        
+        // Update temperature
+        const tempElement = dayElement.querySelector('p:last-child');
+        if (tempElement) {
+            const maxTempRounded = Math.round(maxTemp);
+            const minTempRounded = Math.round(minTemp);
+            
+            tempElement.textContent = `${maxTempRounded}°C`;
+            tempElement.title = `High: ${maxTempRounded}°C, Low: ${minTempRounded}°C`;
+        }
+        
+        // Add tooltip to the whole card
+        dayElement.title = `${getFullDayName(date)}: ${weatherInfo.description}, High ${Math.round(maxTemp)}°C, Low ${Math.round(minTemp)}°C`;
+    }
+    
+    console.log('✅ Daily forecast updated (fixed version)');
+}
+
+// FIX: Better day name function that fits your cards
+function getShortDayName(date, dayIndex) {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    // Compare dates properly
+    const dateString = date.toDateString();
+    const todayString = today.toDateString();
+    const tomorrowString = tomorrow.toDateString();
+    
+    if (dateString === todayString) {
+        return 'Today'; // This shouldn't happen now since we skip today
+    } else if (dateString === tomorrowString) {
+        return 'Tmrw'; // Short form that fits your cards
+    } else {
+        // Return 3-letter day names that fit perfectly
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return dayNames[date.getDay()];
+    }
+}
+
+// Helper function for full day names (for tooltips)
+function getFullDayName(date) {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    const dateString = date.toDateString();
+    const todayString = today.toDateString();
+    const tomorrowString = tomorrow.toDateString();
+    
+    if (dateString === todayString) {
+        return 'Today';
+    } else if (dateString === tomorrowString) {
+        return 'Tomorrow';
+    } else {
+        return date.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+}
+
+// ACCURACY CHECK: Function to verify forecast accuracy
+function checkForecastAccuracy(weatherData) {
+    console.log('🔍 ACCURACY CHECK:');
+    
+    if (!weatherData.daily) {
+        console.error('❌ No daily data');
+        return;
+    }
+    
+    const daily = weatherData.daily;
+    const today = new Date().toDateString();
+    
+    console.log('📅 Today is:', today);
+    console.log('📊 Forecast data:');
+    
+    for (let i = 0; i < Math.min(7, daily.time.length); i++) {
+        const forecastDate = new Date(daily.time[i]);
+        const maxTemp = daily.temperature_2m_max[i];
+        const minTemp = daily.temperature_2m_min[i];
+        const weatherCode = daily.weather_code[i];
+        
+        console.log(`Day ${i}: ${forecastDate.toDateString()} - High: ${Math.round(maxTemp)}°C, Low: ${Math.round(minTemp)}°C, Code: ${weatherCode}`);
+    }
+    
+    // Check if temperatures make sense
+    for (let i = 0; i < daily.temperature_2m_max.length; i++) {
+        const max = daily.temperature_2m_max[i];
+        const min = daily.temperature_2m_min[i];
+        
+        if (max < min) {
+            console.warn(`⚠️ Day ${i}: Max temp (${max}) is less than min temp (${min}) - this seems wrong!`);
+        }
+        
+        if (max > 60 || max < -50 || min > 60 || min < -50) {
+            console.warn(`⚠️ Day ${i}: Temperature seems unrealistic - Max: ${max}°C, Min: ${min}°C`);
+        }
+    }
+    
+    return true;
+}
+
+// ENHANCED: Replace the fetchWeatherData function with accuracy checking
+function fetchWeatherDataWithAccuracyCheck(location) {
+    console.log('🌤️ Fetching weather with accuracy check for:', location);
+    
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?` +
+        `latitude=${location.latitude}&longitude=${location.longitude}&` +
+        `current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&` +
+        `daily=weather_code,temperature_2m_max,temperature_2m_min&` +
+        `hourly=temperature_2m,weather_code&` +
+        `timezone=auto&` +
+        `forecast_days=7`;
+    
+    console.log('🔗 API URL:', weatherUrl);
+    
+    fetch(weatherUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Raw weather data received:', data);
+            
+            // Check accuracy before using the data
+            checkForecastAccuracy(data);
+            
+            weatherApp.weatherData = data;
+            
+            // Update all UI elements
+            updateCurrentWeather(data, location);
+            updateTodaysHighlights(data);
+            updateDailyForecast(data); // This now uses the fixed version
+            
+            hideSearchLoading();
+        })
+        .catch(error => {
+            console.error('❌ Weather fetch error:', error);
+            hideSearchLoading();
+            alert('Failed to get weather data. Please try again.');
+        });
+}
+
+// Replace the original fetchWeatherData function
+window.fetchWeatherData = fetchWeatherDataWithAccuracyCheck;
+
+console.log('✅ Chunk 3: FIXED Daily Forecast Ready');
+console.log('🔧 Fixed: No duplicate "Today", "Tomorrow" is now "Tmrw", accuracy check added');
+
+// ================================
+// FIX: UPDATE TEMPERATURE IN CORRECT POSITION
+// ================================
+
+// EXPLANATION: Fixed function to update temperature in the right place
+// Your HTML structure has temperature in a separate <p> element with orange color
+function updateCurrentWeather(weatherData, location) {
+    const current = weatherData.current;
+    if (!current) return;
+    
+    console.log('📝 Updating current weather display...');
+    
+    // Update location name (in the first <p> inside the first <div>)
+    const locationElement = document.querySelector('.current div p:first-child');
+    if (locationElement) {
+        let locationText = location.name;
+        
+        // Add state/province if available
+        if (location.admin1 && location.admin1 !== location.name) {
+            locationText += `, ${location.admin1}`;
+        }
+        
+        // Add country
+        if (location.country) {
+            locationText += `, ${location.country}`;
+        }
+        
+        locationElement.textContent = locationText;
+        console.log('✅ Updated location:', locationText);
+    }
+    
+    // Update current date (in the second <p> inside the first <div>)
+    const dateElement = document.querySelector('.current div p:nth-child(2)');
+    if (dateElement) {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        dateElement.textContent = now.toLocaleDateString('en-US', options);
+        console.log('✅ Updated date');
+    }
+    
+    // Update weather description (the "Sunny" text - first <p> outside the <div>)
+    const weatherInfo = getWeatherInfo(current.weather_code);
+    const descriptionElement = document.querySelector('.current > p:first-of-type');
+    if (descriptionElement) {
+        descriptionElement.textContent = weatherInfo.description;
+        console.log('✅ Updated description:', weatherInfo.description);
+    }
+    
+    // FIX: Update temperature in the ORANGE colored <p> element (the "25°C" position)
+    const tempElement = document.querySelector('.current > p.text-5xl.font-bold.text-orange-500');
+    if (tempElement) {
+        const temp = Math.round(current.temperature_2m);
+        const tempText = `${temp}°C`;
+        tempElement.textContent = tempText;
+        console.log('✅ Updated temperature in orange position:', tempText);
+    } else {
+        // Fallback: try to find it by the last <p> element
+        const fallbackTempElement = document.querySelector('.current p:last-child');
+        if (fallbackTempElement && fallbackTempElement.textContent.includes('°')) {
+            const temp = Math.round(current.temperature_2m);
+            const tempText = `${temp}°C`;
+            fallbackTempElement.textContent = tempText;
+            console.log('✅ Updated temperature using fallback method:', tempText);
+        } else {
+            console.error('❌ Could not find temperature element');
+        }
+    }
+}
+
+// EXPLANATION: Alternative approach - find temperature element by content
+function findAndUpdateTemperature(currentTemp) {
+    // Find the element that currently shows "25°C" and update it
+    const allParagraphs = document.querySelectorAll('.current p');
+    
+    for (let p of allParagraphs) {
+        // Check if this paragraph contains a temperature (ends with °C or °F)
+        if (p.textContent.match(/\d+°[CF]$/)) {
+            const temp = Math.round(currentTemp);
+            p.textContent = `${temp}°C`;
+            console.log('✅ Found and updated temperature element:', p.textContent);
+            return true;
+        }
+    }
+    
+    console.error('❌ Could not find temperature element to update');
+    return false;
+}
+
+// EXPLANATION: Enhanced updateCurrentWeather with multiple targeting methods
+function updateCurrentWeatherEnhanced(weatherData, location) {
+    const current = weatherData.current;
+    if (!current) return;
+    
+    console.log('📝 Updating current weather (enhanced targeting)...');
+    
+    // Update location name
+    const locationElement = document.querySelector('.current div p:first-child');
+    if (locationElement) {
+        let locationText = location.name;
+        if (location.admin1 && location.admin1 !== location.name) {
+            locationText += `, ${location.admin1}`;
+        }
+        if (location.country) {
+            locationText += `, ${location.country}`;
+        }
+        locationElement.textContent = locationText;
+    }
+    
+    // Update date
+    const dateElement = document.querySelector('.current div p:nth-child(2)');
+    if (dateElement) {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        dateElement.textContent = now.toLocaleDateString('en-US', options);
+    }
+    
+    // Update weather description
+    const weatherInfo = getWeatherInfo(current.weather_code);
+    const descriptionElement = document.querySelector('.current > p:first-of-type');
+    if (descriptionElement) {
+        descriptionElement.textContent = weatherInfo.description;
+    }
+    
+    // MULTI-METHOD TEMPERATURE UPDATE
+    const temp = Math.round(current.temperature_2m);
+    let tempUpdated = false;
+    
+    // Method 1: Try by class name (most specific)
+    const tempByClass = document.querySelector('.current .text-5xl.font-bold.text-orange-500');
+    if (tempByClass) {
+        tempByClass.textContent = `${temp}°C`;
+        tempUpdated = true;
+        console.log('✅ Updated temperature by class name:', `${temp}°C`);
+    }
+    
+    // Method 2: Try by finding existing temperature text
+    if (!tempUpdated) {
+        tempUpdated = findAndUpdateTemperature(temp);
+    }
+    
+    // Method 3: Try by position (last resort)
+    if (!tempUpdated) {
+        const tempByPosition = document.querySelector('.current p:last-child');
+        if (tempByPosition) {
+            tempByPosition.textContent = `${temp}°C`;
+            tempUpdated = true;
+            console.log('✅ Updated temperature by position:', `${temp}°C`);
+        }
+    }
+    
+    if (!tempUpdated) {
+        console.error('❌ Failed to update temperature with all methods');
+        console.log('Available elements in .current:', document.querySelectorAll('.current *'));
+    }
+}
+
+// Replace the existing updateCurrentWeather function
+window.updateCurrentWeather = updateCurrentWeatherEnhanced;
+
+console.log('✅ Temperature Position Fix Applied');
+console.log('🎯 Temperature will now update in the orange 25°C position');
+console.log('🔧 Using multiple targeting methods for reliability');
