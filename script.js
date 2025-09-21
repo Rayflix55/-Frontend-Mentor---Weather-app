@@ -778,3 +778,271 @@ window.updateCurrentWeather = updateCurrentWeatherEnhanced;
 console.log('✅ Temperature Position Fix Applied');
 console.log('🎯 Temperature will now update in the orange 25°C position');
 console.log('🔧 Using multiple targeting methods for reliability');
+
+// ================================
+// CHUNK 4: HOURLY FORECAST (REAL DATA)
+// ================================
+
+// EXPLANATION: Update your hourly forecast section with real weather data
+// This will replace your static "1 PM, 2 PM, 3 PM..." with actual hourly forecasts
+function updateHourlyForecast(weatherData) {
+    console.log('⏰ Updating hourly forecast...');
+    
+    const hourly = weatherData.hourly;
+    if (!hourly || !hourly.time || !hourly.temperature_2m) {
+        console.error('No hourly forecast data available');
+        return;
+    }
+    
+    // Get all your hourly forecast elements
+    const hourlyElements = [
+        document.querySelector('.first'),
+        document.querySelector('.second'), 
+        document.querySelector('.third'),
+        document.querySelector('.fourth'),
+        document.querySelector('.fifth'),
+        document.querySelector('.sixth'),
+        document.querySelector('.seventh'),
+        document.querySelector('.eight')
+    ];
+    
+    // Get current hour to start from
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    console.log('🕐 Current hour:', currentHour);
+    console.log('📊 Available hourly data points:', hourly.time.length);
+    
+    // Update each hourly card
+    for (let i = 0; i < Math.min(8, hourlyElements.length); i++) {
+        const hourlyElement = hourlyElements[i];
+        if (!hourlyElement) {
+            console.warn(`Hourly element ${i} not found`);
+            continue;
+        }
+        
+        // Calculate which hour to show (starting from next hour)
+        const hourIndex = findHourlyIndex(hourly.time, i + 1);
+        
+        if (hourIndex === -1 || hourIndex >= hourly.time.length) {
+            console.warn(`No data for hourly slot ${i}`);
+            continue;
+        }
+        
+        // Get data for this hour
+        const hourTime = new Date(hourly.time[hourIndex]);
+        const temperature = hourly.temperature_2m[hourIndex];
+        const weatherCode = hourly.weather_code ? hourly.weather_code[hourIndex] : 1; // Default to clear if no code
+        
+        // Get weather info
+        const weatherInfo = getWeatherInfo(weatherCode);
+        
+        // Update time (first element in the flex row)
+        const timeElement = hourlyElement.querySelector('p:first-child');
+        if (timeElement) {
+            const timeText = formatHourTime(hourTime);
+            timeElement.textContent = timeText;
+            console.log(`✅ Hour ${i}: ${timeText}`);
+        }
+        
+        // Update weather icon (img element)
+        const iconElement = hourlyElement.querySelector('img');
+        if (iconElement) {
+            iconElement.src = weatherInfo.icon;
+            iconElement.alt = weatherInfo.description;
+            // Fix the image extension if it's wrong
+            if (iconElement.src.includes('.wep')) {
+                iconElement.src = iconElement.src.replace('.wep', '.webp');
+            }
+        }
+        
+        // Update temperature (last element)
+        const tempElement = hourlyElement.querySelector('p:last-child');
+        if (tempElement) {
+            const tempRounded = Math.round(temperature);
+            tempElement.textContent = `${tempRounded}°C`;
+        }
+        
+        // Add tooltip with detailed info
+        hourlyElement.title = `${formatHourTime(hourTime)}: ${weatherInfo.description}, ${Math.round(temperature)}°C`;
+    }
+    
+    console.log('✅ Hourly forecast updated successfully');
+}
+
+// EXPLANATION: Find the correct index in hourly data for a given hour offset
+function findHourlyIndex(hourlyTimes, hoursFromNow) {
+    const now = new Date();
+    const targetTime = new Date(now.getTime() + (hoursFromNow * 60 * 60 * 1000));
+    
+    // Find the closest hour in the forecast data
+    for (let i = 0; i < hourlyTimes.length; i++) {
+        const forecastTime = new Date(hourlyTimes[i]);
+        
+        // If this forecast time is close to our target time (within 1 hour)
+        const timeDiff = Math.abs(forecastTime.getTime() - targetTime.getTime());
+        if (timeDiff < 60 * 60 * 1000) { // Within 1 hour
+            return i;
+        }
+        
+        // If forecast time is after our target, this is the closest
+        if (forecastTime.getTime() >= targetTime.getTime()) {
+            return i;
+        }
+    }
+    
+    // If no exact match, return the closest available
+    return Math.min(hoursFromNow, hourlyTimes.length - 1);
+}
+
+// EXPLANATION: Format hour time for display
+function formatHourTime(date) {
+    const now = new Date();
+    const hour = date.getHours();
+    
+    // Check if it's today, tomorrow, etc.
+    const daysDiff = Math.floor((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysDiff === 0) {
+        // Today - just show hour
+        if (hour === 0) return '12 AM';
+        if (hour === 12) return '12 PM';
+        if (hour < 12) return `${hour} AM`;
+        return `${hour - 12} PM`;
+    } else if (daysDiff === 1) {
+        // Tomorrow - show "Tomorrow" for first few hours, then just hour
+        if (hour < 6) {
+            return 'Tmrw';
+        } else {
+            if (hour === 12) return '12 PM';
+            if (hour < 12) return `${hour} AM`;
+            return `${hour - 12} PM`;
+        }
+    } else {
+        // Future days - show day name
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return dayNames[date.getDay()];
+    }
+}
+
+// EXPLANATION: Add scroll functionality to hourly forecast
+function addHourlyForecastInteractions() {
+    const hourlyContainer = document.querySelector('.forecast .flex.flex-col');
+    
+    if (!hourlyContainer) {
+        console.warn('Hourly forecast container not found');
+        return;
+    }
+    
+    // Add smooth scrolling
+    hourlyContainer.style.scrollBehavior = 'smooth';
+    
+    // Add click interactions to hourly cards
+    const hourlyElements = hourlyContainer.querySelectorAll('div[class*="bg-neutral-600"]');
+    
+    hourlyElements.forEach((element, index) => {
+        // Add click for detailed info
+        element.addEventListener('click', function() {
+            showHourlyDetails(index);
+        });
+        
+        // Make cursor pointer
+        element.style.cursor = 'pointer';
+    });
+    
+    console.log('✅ Added interactions to', hourlyElements.length, 'hourly cards');
+}
+
+// EXPLANATION: Show detailed hourly information when clicked
+function showHourlyDetails(hourIndex) {
+    if (!weatherApp.weatherData || !weatherApp.weatherData.hourly) {
+        console.log('No hourly weather data available');
+        return;
+    }
+    
+    const hourly = weatherApp.weatherData.hourly;
+    const dataIndex = findHourlyIndex(hourly.time, hourIndex + 1);
+    
+    if (dataIndex === -1 || dataIndex >= hourly.time.length) {
+        console.log('No data for this hour');
+        return;
+    }
+    
+    const hourTime = new Date(hourly.time[dataIndex]);
+    const temperature = hourly.temperature_2m[dataIndex];
+    const weatherCode = hourly.weather_code ? hourly.weather_code[dataIndex] : 1;
+    const weatherInfo = getWeatherInfo(weatherCode);
+    
+    // Create detailed info
+    const details = `
+🕐 ${hourTime.toLocaleString('en-US', { 
+    weekday: 'short', 
+    hour: 'numeric', 
+    minute: '2-digit' 
+})}
+🌡️ Temperature: ${Math.round(temperature)}°C
+🌤️ Conditions: ${weatherInfo.description}
+    `.trim();
+    
+    // Simple alert for now (you can make this a styled modal later)
+    alert(details);
+    
+    console.log(`📊 Showed hourly details for slot ${hourIndex}:`, details);
+}
+
+// EXPLANATION: Enhanced fetchWeatherData to include hourly updates
+function fetchWeatherDataWithHourlyForecast(location) {
+    console.log('🌤️ Fetching weather with hourly forecast for:', location);
+    
+    // Enhanced weather URL to get 48 hours of hourly data
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?` +
+        `latitude=${location.latitude}&longitude=${location.longitude}&` +
+        `current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&` +
+        `daily=weather_code,temperature_2m_max,temperature_2m_min&` +
+        `hourly=temperature_2m,weather_code,relative_humidity_2m,precipitation_probability&` +
+        `timezone=auto&` +
+        `forecast_days=2`; // Get 2 days for better hourly coverage
+    
+    fetch(weatherUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Weather data with hourly forecast received:', data);
+            console.log('⏰ Hourly data points:', data.hourly ? data.hourly.time.length : 'None');
+            
+            weatherApp.weatherData = data;
+            
+            // Update all UI elements
+            updateCurrentWeatherEnhanced(data, location);
+            updateTodaysHighlights(data);
+            updateDailyForecast(data);
+            updateHourlyForecast(data); // NEW: Update hourly forecast!
+            
+            hideSearchLoading();
+        })
+        .catch(error => {
+            console.error('❌ Weather fetch error:', error);
+            hideSearchLoading();
+            alert('Failed to get weather data. Please try again.');
+        });
+}
+
+// Replace the fetchWeatherData function
+window.fetchWeatherData = fetchWeatherDataWithHourlyForecast;
+
+// Initialize hourly interactions when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        addHourlyForecastInteractions();
+        console.log('✅ Hourly forecast interactions added');
+    }, 1500); // Wait 1.5 seconds for everything to load
+});
+
+console.log('✅ Chunk 4: Hourly Forecast Complete');
+console.log('⏰ Your hourly cards will now show real hourly weather data!');
+console.log('🖱️ Click on hourly cards to see detailed info!');
+

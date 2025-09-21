@@ -106,3 +106,54 @@ header {
     align-items: center;
   }
 }
+/* ================================
+   WEATHER ICON SIZE FIXES - CSS
+   ================================ */
+
+/* Daily Forecast Icons (Sun, Mon, Tue, etc. cards) */
+.sun img, .mon img, .tue img, .wed img, .thu img, .fri img, .sat img {
+    width: 32px !important;
+    height: 32px !important;
+    object-fit: contain !important;
+    margin: 8px auto !important;
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 40px !important;
+}
+
+/* Hourly Forecast Icons (1PM, 2PM, etc. cards) */
+.first img, .second img, .third img, .fourth img, 
+.fifth img, .sixth img, .seventh img, .eight img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain !important;
+    margin: 0 8px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+}
+
+/* Prevent card overflow and maintain sizes */
+.sun, .mon, .tue, .wed, .thu, .fri, .sat {
+    /* overflow: hidden !important; */
+    min-height: fit-content !important;
+}
+
+.first, .second, .third, .fourth, .fifth, .sixth, .seventh, .eight {
+    /* overflow: hidden !important; */
+    align-items: center !important;
+    min-height: fit-content !important;
+}
+
+/* Ensure text doesn't break layout */
+.sun p, .mon p, .tue p, .wed p, .thu p, .fri p, .sat p {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.first p, .second p, .third p, .fourth p, 
+.fifth p, .sixth p, .seventh p, .eight p {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
