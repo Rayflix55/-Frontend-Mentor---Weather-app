@@ -106,6 +106,22 @@ header {
     align-items: center;
   }
 }
+.dropdown{
+    background-color: rgba(38, 37, 64, 1);
+    border-radius: 10px;
+    position: absolute;
+    color: white;
+}
+.dropdown p{
+  color: orange;
+}
+.dropdown li:hover {
+    background-color: rgba(48, 47, 74, 1);
+    list-style: none;
+    padding: 0.5rem;
+    /* border-bottom: 1px solid white; */
+    border-radius: 10px;
+}
 /* ================================
    WEATHER ICON SIZE FIXES - CSS
    ================================ */
@@ -125,7 +141,7 @@ header {
 .first img, .second img, .third img, .fourth img, 
 .fifth img, .sixth img, .seventh img, .eight img {
     width: 24px !important;
-    height: 24px !important;
+    height: 24.5px !important;
     object-fit: contain !important;
     margin: 0 8px !important;
     display: inline-block !important;

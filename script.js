@@ -941,7 +941,8 @@ function addHourlyForecastInteractions() {
     const hourlyElements = hourlyContainer.querySelectorAll('div[class*="bg-neutral-600"]');
     
     hourlyElements.forEach((element, index) => {
-        // Add click for detailed info
+      
+  // Add click for detailed info
         element.addEventListener('click', function() {
             showHourlyDetails(index);
         });
@@ -1046,3 +1047,87 @@ console.log('✅ Chunk 4: Hourly Forecast Complete');
 console.log('⏰ Your hourly cards will now show real hourly weather data!');
 console.log('🖱️ Click on hourly cards to see detailed info!');
 
+ // Default settings
+  let settings = {
+    temperature: "celsius",
+    wind: "kmh"
+  };
+
+  const unitsBtn = document.getElementById("unitsBtn");
+  const unitsMenu = document.getElementById("unitsMenu");
+  const menuItems = unitsMenu.querySelectorAll("li");
+
+  // Load saved settings
+  if (localStorage.getItem("weatherSettings")) {
+    settings = JSON.parse(localStorage.getItem("weatherSettings"));
+    updateMenu();
+  }
+
+  // Open/close animations
+  function openMenu() {
+    unitsMenu.classList.remove("scale-y-0", "opacity-0");
+    unitsMenu.classList.add("scale-y-100", "opacity-100");
+  }
+
+  function closeMenu() {
+    unitsMenu.classList.remove("scale-y-100", "opacity-100");
+    unitsMenu.classList.add("scale-y-0", "opacity-0");
+  }
+
+  // Toggle on button click
+  unitsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (unitsMenu.classList.contains("scale-y-0")) {
+      openMenu();
+    } else {
+      closeMenu();
+    }
+  });
+
+  // Handle option clicks
+  menuItems.forEach(item => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const type = item.dataset.type;
+      const value = item.dataset.value;
+
+      // Save choice
+      settings[type] = value;
+      localStorage.setItem("weatherSettings", JSON.stringify(settings));
+
+      // Update ✓ marks
+      updateMenu();
+
+      // Close menu
+      closeMenu();
+
+      // Optional: refresh your weather API
+      // updateWeatherUI();
+    });
+  });
+
+  // Close if clicking outside
+  document.addEventListener("click", (e) => {
+    if (!unitsMenu.classList.contains("scale-y-0")) {
+      if (!unitsMenu.contains(e.target) && e.target !== unitsBtn) {
+        closeMenu();
+      }
+    }
+  });
+
+  // Update ✓ marks
+  function updateMenu() {
+    menuItems.forEach(item => {
+      const type = item.dataset.type;
+      const value = item.dataset.value;
+
+      if (settings[type] === value) {
+        item.textContent = "✓ " + item.textContent.replace("✓ ", "");
+      } else {
+        item.textContent = item.textContent.replace("✓ ", "");
+      }
+    });
+
+    
+  }
+    
