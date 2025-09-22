@@ -24,7 +24,7 @@
     <img src="./assets/images/logo.svg" alt="Weather App Logo">
 
     <!-- Dropdown -->
-    <div class="relative inline-block text-left ">
+    <div class="units inline-block text-left ">
       <!-- Dropdown button -->
     <button id="unitsBtn" class="bg-blue-500 p-2 rounded-lg flex items-center text-white">
   <span id="selectedUnit">Units</span>
@@ -66,7 +66,7 @@
     <h1 class="text-5xl font-bold ">How's the sky looking today?</h1>
   </header>
   <!-- SEARCH BAR -->
-  <section class=" flex justify-center mb-5">
+  <section class="search-bar flex justify-center mb-5">
     <form class=" flex items-center" onsubmit="handleSearch(event)">
     <search class="search-func flex  items-center">
   <div class="relative">
@@ -74,7 +74,7 @@
           type="text" 
           id="searchInput"
           placeholder="Search for a place" 
-          class="relative w-96 p-2 pl-10 rounded-xl shadow text-white bg-blue-800 hover:bg-orange-500 hover:text-white   "
+          class=" lg:w-96 p-2 pl-10 rounded-xl shadow text-white  "
           required
           
         >
@@ -92,13 +92,13 @@
     </search>
     </form>
   </section>
-<section class="flex flex-row justify-center">
+<section class="hour-flex flex flex-row justify-center">
   <!-- THIS IS THE PARENT DIV OF THE SECTION I WANT TO FLEX -->
   <div>
 <!-- CURRENT WEATHER -->
-  <section class="mb-4 ml-10">
+  <section class="mb-4 lg:ml-10">
     
-    <div class="current bg-blue-800  text-white p-4 pt-15 pb-15 rounded-xl shadow flex items-center justify-between w-full">
+    <div class="current bg-blue-800  text-white p-4 pt-15 pb-15 rounded-xl shadow flex items-center justify-between lg:w-full">
      <div>
        <p class="text-3xl">Berlin, Germany <br> </p>
        <p>Sunday, 10th October, 2025.</p>
@@ -110,9 +110,9 @@
     </div>
   </section>
   <!-- TODAY'S HIGHLIGHTS -->
-  <section class="mb-4 ml-10 mt-4">
+  <section class="highlights mb-4 lg:ml-10 mt-4">
     <h2 class="text-xl font-bold mb-2 text-orange-500">Today's Highlights</h2>
-    <div class="flex flex-row space-x-6">
+    <div class="high flex flex-row space-x-6">
       <div class="humidity  p-4 rounded-xl shadow w-32 ">
         <p class="font-bold text-blue-400">Humidity</p>
         <p>60%</p>
@@ -133,10 +133,10 @@
   </section>
 
   <!-- DAILY FORECAST -->
-  <section class="ml-10 mt-8">
+  <section class="daily lg:ml-10 mt-8">
     <h2 class="text-xl font-bold mb-2 text-orange-500">Daily Forecast</h2>
-    <div class="flex flex-row space-x-4">
-      <div class="sun bg-white p-4 rounded-xl shadow text-center size-20 h-fit ml-2">
+    <div class="day flex flex-row space-x-4">
+      <div class="sun bg-white p-4 rounded-xl shadow text-center size-20 h-fit lg:ml-2">
         <p class="font-bold text-blue-400">Sun</p>
         <img src="assets/images/icon-sunny.webp" alt="Sunny Icon" class="mx-auto">
         <p>25°C</p>
@@ -176,7 +176,7 @@
 
   </div>
   <!-- HOURLY FORECAST -->
-  <section class="forecast ml-10 p-5 rounded-xl shadow h-fit ">
+  <section class="forecast lg:ml-10 p-5 rounded-xl shadow h-fit ">
     <h2 class="text-xl  font-bold mb-2 text-orange-500">Hourly Forecast</h2>
     <div class=" flex flex-col space-y-4 overflow-x-auto">
       <!-- FIRST -->

@@ -5,6 +5,9 @@ body {
   font-family: "Agbalumo", system-ui;
   font-weight: 400;
   color: whitesmoke;
+  background-image: url(assets/images/thunderstorm-village.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 header {
   animation: headerGlow 3s infinite;
@@ -20,11 +23,14 @@ header {
     color: orange;
   }
   66% {
-    color: blue;
+    color: grey;
   }
   100% {
     color: white;
   }
+}
+.units {
+  border-radius: 10px;
 }
 .relative {
   background-image: url(assets/images/bg-today-small.svg);
@@ -67,10 +73,10 @@ header {
   padding: 2rem;
 }
 .attribution a {
-  animation: headerGlow 3s infinite;
+  animation: attributionGlow 3s infinite;
 }
 
-@keyframes headerGlow {
+@keyframes attributionGlow {
   0% {
     color: white;
   }
@@ -87,89 +93,226 @@ header {
 
 /* MEDIA QUERIES */
 @media screen and (min-width: 330px) and (max-width: 450px) {
-  .search-func{
+  .search-func {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
   }
-  .relative{
-    width: 250px; 
-  }
-  .button{
+  .relative {
     width: 250px;
   }
-  .current{
+  .button {
+    width: 250px;
+  }
+  .current {
     /* width:250px; */
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
 }
-.dropdown{
-    background-color: rgba(38, 37, 64, 1);
-    border-radius: 10px;
-    position: absolute;
-    color: white;
+.dropdown {
+  background-color: rgba(38, 37, 64, 1);
+  border-radius: 10px;
+  position: absolute;
+  color: white;
 }
-.dropdown p{
+.dropdown p {
   color: orange;
 }
 .dropdown li:hover {
-    background-color: rgba(48, 47, 74, 1);
-    list-style: none;
-    padding: 0.5rem;
-    /* border-bottom: 1px solid white; */
-    border-radius: 10px;
+  background-color: rgba(48, 47, 74, 1);
+  list-style: none;
+  padding: 0.5rem;
+  /* border-bottom: 1px solid white; */
+  border-radius: 10px;
 }
 /* ================================
    WEATHER ICON SIZE FIXES - CSS
    ================================ */
 
 /* Daily Forecast Icons (Sun, Mon, Tue, etc. cards) */
-.sun img, .mon img, .tue img, .wed img, .thu img, .fri img, .sat img {
-    width: 32px !important;
-    height: 32px !important;
-    object-fit: contain !important;
-    margin: 8px auto !important;
-    display: block !important;
-    max-width: 100% !important;
-    max-height: 40px !important;
+.sun img,
+.mon img,
+.tue img,
+.wed img,
+.thu img,
+.fri img,
+.sat img {
+  width: 32px !important;
+  height: 32px !important;
+  object-fit: contain !important;
+  margin: 8px auto !important;
+  display: block !important;
+  max-width: 100% !important;
+  max-height: 40px !important;
 }
 
 /* Hourly Forecast Icons (1PM, 2PM, etc. cards) */
-.first img, .second img, .third img, .fourth img, 
-.fifth img, .sixth img, .seventh img, .eight img {
-    width: 24px !important;
-    height: 24.5px !important;
-    object-fit: contain !important;
-    margin: 0 8px !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-    flex-shrink: 0 !important;
+.first img,
+.second img,
+.third img,
+.fourth img,
+.fifth img,
+.sixth img,
+.seventh img,
+.eight img {
+  width: 24px !important;
+  height: 24.5px !important;
+  object-fit: contain !important;
+  margin: 0 8px !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
 }
 
 /* Prevent card overflow and maintain sizes */
-.sun, .mon, .tue, .wed, .thu, .fri, .sat {
-    /* overflow: hidden !important; */
-    min-height: fit-content !important;
+.sun,
+.mon,
+.tue,
+.wed,
+.thu,
+.fri,
+.sat {
+  /* overflow: hidden !important; */
+  min-height: fit-content !important;
 }
 
-.first, .second, .third, .fourth, .fifth, .sixth, .seventh, .eight {
-    /* overflow: hidden !important; */
-    align-items: center !important;
-    min-height: fit-content !important;
+.first,
+.second,
+.third,
+.fourth,
+.fifth,
+.sixth,
+.seventh,
+.eight {
+  /* overflow: hidden !important; */
+  align-items: center !important;
+  min-height: fit-content !important;
 }
 
 /* Ensure text doesn't break layout */
-.sun p, .mon p, .tue p, .wed p, .thu p, .fri p, .sat p {
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+.sun p,
+.mon p,
+.tue p,
+.wed p,
+.thu p,
+.fri p,
+.sat p {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
-.first p, .second p, .third p, .fourth p, 
-.fifth p, .sixth p, .seventh p, .eight p {
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
+.first p,
+.second p,
+.third p,
+.fourth p,
+.fifth p,
+.sixth p,
+.seventh p,
+.eight p {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+@media screen and (min-width: 351px) and (max-width: 480px) {
+  body {
+    background-image: url(assets/images/Mobile-image.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+.relative{
+    width:160%;
+}
+.button{
+  width:160%;
+}
+  .search-func {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .current {
+    margin: 0 auto;
+    padding: 1rem;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    border-radius: 30px;
+  }
+  .hour-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .forecast {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .daily {
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+  }
+  .day {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: auto;
+    align-items: center;
+    margin: auto;
+  }
+  .sun,
+  .mon,
+  .tue,
+  .wed,
+  .thu,
+  .fri,
+  .sat {
+    margin-bottom: 10px;
+    padding: 1rem;
+    width: 100px;
+    font-size: 14px;
+  }
+  .highlights h2,
+  .daily h2{
+    margin-left:20px;
+  }
+  .highlights {
+   display:flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+  }
+  .high {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: auto;
+    align-items: center;
+
+    margin: auto;
+    font-size: 17px;
+  }
+  .humidity,
+  .wind,
+  .uv,
+  .feel {
+    margin-bottom: 10px;
+    padding: 1rem;
+    width: 155px;
+   
+  }
 }
