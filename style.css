@@ -158,7 +158,7 @@ header {
 .seventh img,
 .eight img {
   width: 24px !important;
-  height: 24.5px !important;
+  height: 24px !important;
   object-fit: contain !important;
   margin: 0 8px !important;
   display: inline-block !important;
@@ -215,8 +215,136 @@ header {
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
+@media (max-width:330px){
+ body {
+    background-image: url(assets/images/Mobile-image.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
 
-@media screen and (min-width: 300px) and (max-width: 390px) {
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+.relative{
+    width:140%;
+}
+.button{
+  width:140%;
+}
+  .search-func {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ 
+  }
+  .current {
+    margin: 0 auto;
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    border-radius: 20px;
+  }
+  .hour-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .forecast {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width:95%;
+  }
+  .first,
+.second,
+.third,
+.fourth,
+.fifth,
+.sixth,
+.seventh,
+.eight{
+  width:100%;
+}
+  .daily {
+    display: flex;
+    flex-direction: column;
+
+    margin-left:10px;
+  }
+  .day {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: auto;
+    align-items: center;
+    margin: auto;
+    justify-content: space-between;
+
+  }
+  .sun,
+  .mon,
+  .tue,
+  .wed,
+  .thu,
+  .fri,
+  .sat {
+    margin-bottom: 10px;
+    padding: 1rem;
+   width:90%;
+    font-size: 14px;
+  }
+  .highlights h2,
+  .daily h2{
+    margin-left:20px;
+  }
+  .highlights {
+   display:flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    
+  }
+  .high {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: auto;
+    align-items: center;
+   
+    margin: auto;
+    font-size: 17px;
+  }
+  .humidity,
+  .wind,
+  .uv,
+  .feel {
+    margin-bottom: 10px;
+    padding: 1rem;
+   width: 90%;
+   
+  }
+  
+  .attribution{
+   margin-top: 10px;
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center;
+  font-size: 12px;
+  padding:1rem;
+
+}
+
+}
+
+
+@media screen and (min-width: 332px) and (max-width: 390px) {
   .current {
     width: 95%;
     margin: auto;
@@ -245,7 +373,7 @@ header {
 }
 
 
-@media screen and (min-width: 360px) and (max-width: 480px) {
+@media screen and (min-width: 332px) and (max-width: 480px) {
   body {
     background-image: url(assets/images/Mobile-image.jpg);
     background-size: cover;
@@ -254,10 +382,18 @@ header {
     font-size: 14px;
     display: flex;
     flex-direction: column;
-
     justify-content: center;
     min-height: 100vh;
     margin: 0;
+  }
+  .dropdown{
+    background: rgba(38, 37, 64, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    z-index: 1000;
+    margin-right:15px;
   }
 .relative{
     width:160%;
@@ -279,7 +415,7 @@ header {
     align-items: center;
     justify-content: center;
     text-align: left;
-    border-radius: 30px;
+    border-radius: 20px;
   }
   .hour-flex {
     display: flex;
