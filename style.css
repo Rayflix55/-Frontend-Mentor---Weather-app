@@ -216,7 +216,36 @@ header {
   flex-shrink: 0 !important;
 }
 
-@media screen and (min-width: 351px) and (max-width: 480px) {
+@media screen and (min-width: 300px) and (max-width: 390px) {
+  .current {
+    width: 95%;
+    margin: auto;
+    border-radius: 20px;
+  }
+  .highlights{
+    width:95%;
+    margin:auto;
+    border-radius:20px;
+  }
+.forecast{
+  width:95%;
+  margin:auto;
+  border-radius:20px;
+}
+.attribution{
+  
+  margin-top: 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem;
+
+}
+
+}
+
+
+@media screen and (min-width: 360px) and (max-width: 480px) {
   body {
     background-image: url(assets/images/Mobile-image.jpg);
     background-size: cover;
