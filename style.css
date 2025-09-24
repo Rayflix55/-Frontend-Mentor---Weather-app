@@ -23,7 +23,7 @@ header {
     color: orange;
   }
   66% {
-    color: grey;
+    color: #e6d751;
   }
   100% {
     color: white;
@@ -84,7 +84,7 @@ header {
     color: orange;
   }
   66% {
-    color: blue;
+    color: #e6d751;
   }
   100% {
     color: white;
@@ -215,8 +215,8 @@ header {
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
-@media (max-width:330px){
- body {
+@media (max-width: 330px) {
+  body {
     background-image: url(assets/images/Mobile-image.jpg);
     background-size: cover;
     background-repeat: no-repeat;
@@ -229,26 +229,25 @@ header {
     min-height: 100vh;
     margin: 0;
   }
-    .dropdown{
+  .dropdown {
     background: rgba(38, 37, 64, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 1000;
-    margin-right:15px;
+    margin-right: 15px;
   }
-.relative{
-    width:140%;
-}
-.button{
-  width:140%;
-}
+  .relative {
+    width: 140%;
+  }
+  .button {
+    width: 140%;
+  }
   .search-func {
     display: flex;
     flex-direction: column;
     align-items: center;
- 
   }
   .current {
     margin: 0 auto;
@@ -270,23 +269,23 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width:95%;
+    width: 95%;
   }
   .first,
-.second,
-.third,
-.fourth,
-.fifth,
-.sixth,
-.seventh,
-.eight{
-  width:100%;
-}
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth,
+  .seventh,
+  .eight {
+    width: 100%;
+  }
   .daily {
     display: flex;
     flex-direction: column;
 
-    margin-left:10px;
+    margin-left: 10px;
   }
   .day {
     display: grid;
@@ -295,7 +294,6 @@ header {
     align-items: center;
     margin: auto;
     justify-content: space-between;
-
   }
   .sun,
   .mon,
@@ -306,26 +304,25 @@ header {
   .sat {
     margin-bottom: 10px;
     padding: 1rem;
-   width:90%;
+    width: 90%;
     font-size: 14px;
   }
   .highlights h2,
-  .daily h2{
-    margin-left:20px;
+  .daily h2 {
+    margin-left: 20px;
   }
   .highlights {
-   display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     margin: auto;
-    
   }
   .high {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     padding: auto;
     align-items: center;
-   
+
     margin: auto;
     font-size: 17px;
   }
@@ -335,62 +332,72 @@ header {
   .feel {
     margin-bottom: 10px;
     padding: 1rem;
-   width: 90%;
-   
+    width: 90%;
   }
-  
-  .attribution{
-   margin-top: 10px;
-  display:flex;
-  flex-direction:row;
-  justify-content:space-between;
-  align-items:center;
-  font-size: 12px;
-  padding:1rem;
 
+  .attribution {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 1rem;
+  }
 }
 
-}
-
-
+/* 332px to 390px SCREENS */
 @media screen and (min-width: 332px) and (max-width: 390px) {
   .current {
     width: 95%;
     margin: auto;
     border-radius: 20px;
   }
-  .highlights{
-    width:95%;
-    margin:auto;
-    border-radius:20px;
+  .highlights {
+    width: 95%;
+    margin: auto;
+    border-radius: 20px;
   }
-.forecast{
-  width:95%;
-  margin:auto;
-  border-radius:20px;
-}
-.attribution{
-  
-  margin-top: 10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem;
-
-}
-  .dropdown{
+  .first img,
+  .second img,
+  .third img,
+  .fourth img,
+  .fifth img,
+  .sixth img,
+  .seventh img,
+  .eight img {
+    width: 35px !important;
+    height: 35px !important;
+    object-fit: contain !important;
+    margin: 0 8px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+  }
+  .forecast {
+    width: 95%;
+    margin: auto;
+    border-radius: 20px;
+  }
+  .attribution {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+  .dropdown {
     background: rgba(38, 37, 64, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 1000;
-    margin-right:15px;
+    margin-right: 15px;
   }
-
 }
 
-
+/* TO 480px */
 @media screen and (min-width: 332px) and (max-width: 480px) {
   body {
     background-image: url(assets/images/Mobile-image.jpg);
@@ -404,21 +411,21 @@ header {
     min-height: 100vh;
     margin: 0;
   }
-  .dropdown{
+  .dropdown {
     background: rgba(38, 37, 64, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 1000;
-    margin-right:15px;
+    margin-right: 15px;
   }
-.relative{
-    width:160%;
-}
-.button{
-  width:160%;
-}
+  .relative {
+    width: 160%;
+  }
+  .button {
+    width: 160%;
+  }
   .search-func {
     display: flex;
     flex-direction: column;
@@ -471,11 +478,11 @@ header {
     font-size: 14px;
   }
   .highlights h2,
-  .daily h2{
-    margin-left:20px;
+  .daily h2 {
+    margin-left: 20px;
   }
   .highlights {
-   display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     margin: auto;
@@ -496,6 +503,160 @@ header {
     margin-bottom: 10px;
     padding: 1rem;
     width: 155px;
-   
+  }
+}
+/* 768px to 1030px SCREENS (TABLETS)*/
+@media screen and (min-width: 768px) and (max-width: 1030px) {
+  body {
+    background-image: url(assets/images/Mobile-image.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .dropdown {
+    background: rgba(38, 37, 64, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    z-index: 1000;
+    margin-right: 15px;
+  }
+  .relative {
+    width: 340%;
+  }
+  .button {
+    font-size: 1.3rem;
+    width: 340%;
+  }
+  .search-func {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .curr-weather {
+    font-size:1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+ 
+  }
+  .current {
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    border-radius: 25px;
+  }
+  .hour-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .forecast {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    border-radius: 15px;
+    margin-top: 10px;
+  }
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth,
+  .seventh,
+  .eight {
+    width: 100%;
+    font-size: 1.5rem;
+  }
+  .first img,
+  .second img,
+  .third img,
+  .fourth img,
+  .fifth img,
+  .sixth img,
+  .seventh img,
+  .eight img {
+    width: 65px !important;
+    height: 65px !important;
+    object-fit: contain !important;
+    margin: 0 8px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+  }
+  .daily {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
+  .day {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding-top: 10px;
+    align-items: center;
+    margin: auto;
+  }
+  .sun,
+  .mon,
+  .tue,
+  .wed,
+  .thu,
+  .fri,
+  .sat {
+    margin-bottom: 10px;
+    padding: 1rem;
+    width: 120px;
+    font-size: 1.3rem;
+  }
+  .highlights h2,
+  .daily h2,
+  .forecast h2 {
+    margin-left: 20px;
+    font-size: 1.5rem;
+  }
+  .highlights {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+  }
+  .high {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding-top: 10px;
+    align-items: center;
+    margin: auto;
+  }
+  .humidity,
+  .wind,
+  .uv,
+  .feel {
+    margin-bottom: 10px;
+    padding: 1rem;
+    width: 155px;
+    font-size: 1.3rem;
+  }
+   .attribution {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    font-size: 1.7rem;
   }
 }
