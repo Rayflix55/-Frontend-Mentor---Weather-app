@@ -1313,5 +1313,73 @@ console.log('🖱️ Click on hourly cards to see detailed info!');
 });
 
 
+const searchInput = document.getElementById("searchInput");
+const micBtn = document.getElementById("micBtn");
+const suggestionsList = document.getElementById("suggestionsList");
+
+// ========== AUTO SUGGESTIONS ==========
+async function fetchSuggestions(query) {
+  if (!query) {
+    suggestionsList.innerHTML = "";
+    suggestionsList.classList.add("hidden");
+    return;
+  }
+
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.results) {
+      suggestionsList.innerHTML = "";
+      data.results.forEach(city => {
+        const li = document.createElement("li");
+        li.textContent = `${city.name}, ${city.country}`;
+        li.className = "px-4 py-2 cursor-pointer hover:bg-blue-100";
+        li.onclick = () => {
+          searchInput.value = city.name;
+          suggestionsList.classList.add("hidden");
+          // 🔥 Trigger your weather fetch here
+          fetchWeather(city.latitude, city.longitude);
+        };
+        suggestionsList.appendChild(li);
+      });
+      suggestionsList.classList.remove("hidden");
+    } else {
+      suggestionsList.classList.add("hidden");
+    }
+  } catch (error) {
+    console.error("Error fetching suggestions:", error);
+  }
+}
+
+searchInput.addEventListener("input", () => {
+  fetchSuggestions(searchInput.value.trim());
+});
+
+// ========== VOICE SEARCH ==========
+if ("webkitSpeechRecognition" in window) {
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  micBtn.addEventListener("click", () => {
+    recognition.start();
+    micBtn.textContent = "🎙️"; // listening
+  });
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    searchInput.value = transcript;
+    fetchSuggestions(transcript); // immediately suggest/fetch
+    micBtn.textContent = "🎤";
+  };
+
+  recognition.onerror = () => {
+    micBtn.textContent = "🎤";
+  };
+}
+
+
 
 
