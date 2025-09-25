@@ -1047,87 +1047,271 @@ console.log('✅ Chunk 4: Hourly Forecast Complete');
 console.log('⏰ Your hourly cards will now show real hourly weather data!');
 console.log('🖱️ Click on hourly cards to see detailed info!');
 
- // Default settings
-  let settings = {
-    temperature: "celsius",
-    wind: "kmh"
+ document.addEventListener('DOMContentLoaded', () => {
+  // ===== DOM elements (local names to avoid redeclaration) =====
+  const unitsBtnEl = document.getElementById('unitsBtn');
+  const unitsMenuEl = document.getElementById('unitsMenu');
+  const unitsIconEl = document.getElementById('unitsIcon');
+  const unitItems = unitsMenuEl ? unitsMenuEl.querySelectorAll('li[data-type]') : [];
+
+  const favBtnEl = document.getElementById('favBtn');
+  const favMenuEl = document.getElementById('favMenu');
+  const favIconEl = document.getElementById('favIcon');
+  const favListEl = document.getElementById('favList');
+  const addFavBtnEl = document.getElementById('addFavBtn');
+
+  // ===== Settings (persisted) =====
+  let settings = JSON.parse(localStorage.getItem('weatherSettings')) || {
+    temperature: 'celsius',
+    wind: 'kmh',
+    favorites: []
   };
 
-  const unitsBtn = document.getElementById("unitsBtn");
-  const unitsMenu = document.getElementById("unitsMenu");
-  const menuItems = unitsMenu.querySelectorAll("li");
-
-  // Load saved settings
-  if (localStorage.getItem("weatherSettings")) {
-    settings = JSON.parse(localStorage.getItem("weatherSettings"));
-    updateMenu();
+  function saveSettings() {
+    localStorage.setItem('weatherSettings', JSON.stringify(settings));
   }
 
-  // Open/close animations
-  function openMenu() {
-    unitsMenu.classList.remove("scale-y-0", "opacity-0");
-    unitsMenu.classList.add("scale-y-100", "opacity-100");
+  // ===== UI helpers =====
+  function openMenu(menuEl, iconEl) {
+    if (!menuEl) return;
+    menuEl.classList.remove('scale-y-0', 'opacity-0', '-translate-y-2');
+    menuEl.classList.add('scale-y-100', 'opacity-100', 'translate-y-0');
+    if (iconEl) iconEl.classList.add('rotate-180');
+  }
+  function closeMenu(menuEl, iconEl) {
+    if (!menuEl) return;
+    menuEl.classList.remove('scale-y-100', 'opacity-100', 'translate-y-0');
+    menuEl.classList.add('scale-y-0', 'opacity-0', '-translate-y-2');
+    if (iconEl) iconEl.classList.remove('rotate-180');
   }
 
-  function closeMenu() {
-    unitsMenu.classList.remove("scale-y-100", "opacity-100");
-    unitsMenu.classList.add("scale-y-0", "opacity-0");
+  // Close other menus helper (the new behaviour you requested)
+  function closeOtherMenus(except) {
+    if (except !== 'units') closeMenu(unitsMenuEl, unitsIconEl);
+    if (except !== 'fav') closeMenu(favMenuEl, favIconEl);
   }
 
-  // Toggle on button click
-  unitsBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (unitsMenu.classList.contains("scale-y-0")) {
-      openMenu();
-    } else {
-      closeMenu();
-    }
-  });
+  // ===== Units menu rendering & interaction =====
+  function renderUnitCheckmarks() {
+    if (!unitItems) return;
+    unitItems.forEach(li => {
+      const type = li.dataset.type;
+      const value = li.dataset.value;
+      const label = li.textContent.replace(/^✓\s*/, '').trim();
+      li.textContent = (settings[type] === value) ? `✓ ${label}` : label;
+    });
+    // Keep label "Units" as requested
+    const selectedUnitEl = document.getElementById('selectedUnit');
+    if (selectedUnitEl) selectedUnitEl.textContent = 'Units';
+  }
+  renderUnitCheckmarks();
 
-  // Handle option clicks
-  menuItems.forEach(item => {
-    item.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const type = item.dataset.type;
-      const value = item.dataset.value;
+  // Toggle units menu (and auto-close the favorites)
+  if (unitsBtnEl) {
+    unitsBtnEl.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const closed = unitsMenuEl.classList.contains('scale-y-0');
+      closeOtherMenus('units');            // <-- close other menus first
+      if (closed) openMenu(unitsMenuEl, unitsIconEl);
+      else closeMenu(unitsMenuEl, unitsIconEl);
+    });
+  }
 
-      // Save choice
+  // Pick a unit option
+  unitItems.forEach(li => {
+    li.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const type = li.dataset.type;
+      const value = li.dataset.value;
       settings[type] = value;
-      localStorage.setItem("weatherSettings", JSON.stringify(settings));
+      saveSettings();
+      renderUnitCheckmarks();
+      closeMenu(unitsMenuEl, unitsIconEl);
 
-      // Update ✓ marks
-      updateMenu();
-
-      // Close menu
-      closeMenu();
-
-      // Optional: refresh your weather API
-      // updateWeatherUI();
+      // Re-apply units to UI (converts existing numbers) if available
+      if (typeof applyUnitsToUI === 'function') applyUnitsToUI();
     });
   });
 
-  // Close if clicking outside
-  document.addEventListener("click", (e) => {
-    if (!unitsMenu.classList.contains("scale-y-0")) {
-      if (!unitsMenu.contains(e.target) && e.target !== unitsBtn) {
-        closeMenu();
+  // ===== Favorites logic =====
+  function renderFavoritesList() {
+    if (!favListEl) return;
+    favListEl.innerHTML = '';
+    if (!Array.isArray(settings.favorites) || settings.favorites.length === 0) {
+      favListEl.innerHTML = '<p class="text-gray-400 text-sm px-2">No favorites yet</p>';
+      return;
+    }
+
+    settings.favorites.forEach(city => {
+      const row = document.createElement('div');
+      row.className = 'flex justify-between items-center px-2 py-1 hover:bg-gray-100 rounded cursor-pointer';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = city;
+      nameSpan.className = 'text-blue-700 font-medium';
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerHTML = '✕';
+      removeBtn.className = 'text-red-500 hover:text-red-700 ml-3';
+
+      // Click name -> trigger search (uses your existing searchCity or handleSearch)
+      nameSpan.addEventListener('click', () => {
+        if (typeof window.searchCity === 'function') {
+          window.searchCity(city);
+        } else {
+          const input = document.getElementById('searchInput');
+          if (input) {
+            input.value = city;
+            if (typeof window.handleSearch === 'function') {
+              // call handleSearch with a synthetic event
+              window.handleSearch({ preventDefault() {}, target: input });
+            } else {
+              // fallback: try to call fetch by geocoding
+              if (typeof window.fetchWeatherData === 'function') {
+                // try direct fetch if you have function taking a location object
+                // nothing here — prefer searchCity/handleSearch
+              }
+            }
+          }
+        }
+        closeMenu(favMenuEl, favIconEl);
+      });
+
+      // Remove favorite
+      removeBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        settings.favorites = settings.favorites.filter(x => x.toLowerCase() !== city.toLowerCase());
+        saveSettings();
+        renderFavoritesList();
+      });
+
+      row.appendChild(nameSpan);
+      row.appendChild(removeBtn);
+      favListEl.appendChild(row);
+    });
+  }
+  renderFavoritesList();
+
+  // Toggle favorites menu (and auto-close the units menu)
+  if (favBtnEl) {
+    favBtnEl.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const closed = favMenuEl.classList.contains('scale-y-0');
+      closeOtherMenus('fav');             // <-- close other menus first
+      if (closed) openMenu(favMenuEl, favIconEl);
+      else closeMenu(favMenuEl, favIconEl);
+    });
+  }
+
+  // Add current location to favorites (prevent duplicates)
+  if (addFavBtnEl) {
+    addFavBtnEl.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+
+      // Get current city name from weatherApp.currentLocation (preferred)
+      let cityName = null;
+      if (window.weatherApp && weatherApp.currentLocation && weatherApp.currentLocation.name) {
+        cityName = weatherApp.currentLocation.name;
+      } else {
+        // fallback: read from DOM (.current div first p)
+        const locationElement = document.querySelector('.current div p:first-child');
+        if (locationElement) {
+          cityName = locationElement.textContent.trim().split(',')[0].trim();
+        }
       }
+
+      if (!cityName) {
+        alert('No current location to add. Search for a city first.');
+        return;
+      }
+
+      // prevent duplicates (case-insensitive)
+      if ((settings.favorites || []).some(x => x.toLowerCase() === cityName.toLowerCase())) {
+        alert(`${cityName} is already in your favorites.`);
+        return;
+      }
+
+      settings.favorites = settings.favorites || [];
+      settings.favorites.push(cityName);
+      saveSettings();
+      renderFavoritesList();
+    });
+  }
+
+  // Close menus when clicking outside
+  document.addEventListener('click', (ev) => {
+    if (unitsMenuEl && !unitsMenuEl.contains(ev.target) && ev.target !== unitsBtnEl) {
+      closeMenu(unitsMenuEl, unitsIconEl);
+    }
+    if (favMenuEl && !favMenuEl.contains(ev.target) && ev.target !== favBtnEl) {
+      closeMenu(favMenuEl, favIconEl);
     }
   });
 
-  // Update ✓ marks
-  function updateMenu() {
-    menuItems.forEach(item => {
-      const type = item.dataset.type;
-      const value = item.dataset.value;
+  // ===== Unit conversion helpers & UI application (optional) =====
+  // If you already have applyUnitsToUI in your project, this won't override it.
+  function cToF(c){ return Math.round((c * 9/5) + 32); }
+  function fToC(f){ return Math.round((f - 32) * 5/9); }
+  function kmhToMph(k){ return Math.round(k * 0.621371); }
+  function mphToKmh(m){ return Math.round(m * 1.60934); }
 
-      if (settings[type] === value) {
-        item.textContent = "✓ " + item.textContent.replace("✓ ", "");
-      } else {
-        item.textContent = item.textContent.replace("✓ ", "");
+  // Try to call your app's update renderers first and then convert any visible leaf strings
+  function applyUnitsToUI() {
+    // Re-render from data if your app provides renderers
+    if (window.weatherApp && weatherApp.weatherData) {
+      try {
+        if (typeof window.updateCurrentWeatherEnhanced === 'function') {
+          updateCurrentWeatherEnhanced(weatherApp.weatherData, weatherApp.currentLocation || {});
+        }
+        if (typeof window.updateTodaysHighlights === 'function') {
+          updateTodaysHighlights(weatherApp.weatherData);
+        }
+        if (typeof window.updateDailyForecast === 'function') {
+          updateDailyForecast(weatherApp.weatherData);
+        }
+        if (typeof window.updateHourlyForecast === 'function') {
+          updateHourlyForecast(weatherApp.weatherData);
+        }
+      } catch (err) {
+        console.warn('Error re-rendering before converting units:', err);
+      }
+    }
+
+    // Then convert visible leaf nodes
+    const leafEls = Array.from(document.querySelectorAll('body *')).filter(el => el.childElementCount === 0);
+    leafEls.forEach(el => {
+      // Temperatures like "25°C" or "77°F"
+      if (/\d+\s*°\s*[CF]/i.test(el.textContent)) {
+        const tmatch = el.textContent.match(/(-?\d+\.?\d*)\s*°\s*([CF])/i);
+        if (!tmatch) return;
+        const num = parseFloat(tmatch[1]);
+        const curUnit = tmatch[2].toUpperCase();
+        if (settings.temperature === 'fahrenheit' && curUnit === 'C') {
+          el.textContent = `${cToF(num)}°F`;
+        } else if (settings.temperature === 'celsius' && curUnit === 'F') {
+          el.textContent = `${fToC(num)}°C`;
+        }
+      }
+      // Winds like "15 km/h" or "9 mph"
+      if (/\d+\s*(km\/h|kmh|mph)/i.test(el.textContent)) {
+        const wmatch = el.textContent.match(/(-?\d+\.?\d*)\s*(km\/h|kmh|mph)/i);
+        if (!wmatch) return;
+        const num = parseFloat(wmatch[1]);
+        const curUnit = wmatch[2].toLowerCase();
+        if (settings.wind === 'mph' && curUnit.indexOf('mph') === -1) {
+          el.textContent = `${kmhToMph(num)} mph`;
+        } else if (settings.wind === 'kmh' && curUnit.indexOf('mph') !== -1) {
+          el.textContent = `${mphToKmh(num)} km/h`;
+        }
       }
     });
-
-    
   }
-    
+
+  // Apply units on load (if any weather data is already present)
+  applyUnitsToUI();
+
+});
+
+
+
+
