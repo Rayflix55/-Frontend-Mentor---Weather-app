@@ -363,13 +363,13 @@ header {
 }
 @media (max-width: 360px){
   .logo{
-    width: 50px;
+    width: 130px;
   }
   #favBtn{
-     font-size:7px;
+     font-size:11px;
   }
   #unitsBtn{
-        font-size:2px;
+        font-size:11px;
   }
 }
 
