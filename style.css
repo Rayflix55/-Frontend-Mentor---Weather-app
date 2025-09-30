@@ -46,6 +46,17 @@ header {
 .forecast {
   background-color: rgba(38, 37, 64, 1);
 }
+.drop{
+ background-color: rgba(48, 47, 74, 1);
+  border-radius:10px;
+}
+#dayMenu{
+    background-color: rgba(38, 37, 64, 1);
+   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
 /* TODAYS HIGHLIGHT SECTION */
 .humidity,
 .wind,
@@ -111,6 +122,7 @@ header {
     flex-direction: column;
     align-items: center;
   }
+ 
 }
   .dropdown {
     background: rgba(38, 37, 64, 0.7);
@@ -349,6 +361,17 @@ header {
     padding: 1rem;
   }
 }
+@media (max-width: 360px){
+  .logo{
+    width: 50px;
+  }
+  #favBtn{
+     font-size:7px;
+  }
+  #unitsBtn{
+        font-size:2px;
+  }
+}
 
 /* 332px to 390px SCREENS */
 @media screen and (min-width: 332px) and (max-width: 390px) {
@@ -398,6 +421,15 @@ header {
     border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 1000;
     margin-right: 15px;
+  }
+   .logo{
+    width: 150px;
+  }
+  #favBtn{
+     font-size:12px;
+  }
+  #unitsBtn{
+        font-size:12px;
   }
 }
 
