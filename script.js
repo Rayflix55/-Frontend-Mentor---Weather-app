@@ -1541,3 +1541,63 @@ document.addEventListener("DOMContentLoaded", async () => {
   await updateForecast(rotatedDays[0]);
 });
 
+// Add loading state UI elements
+function showLoadingState() {
+  const cards = document.querySelectorAll('[class*="bg-neutral-600"]');
+  cards.forEach(card => {
+    // Keep structure but show loading animation
+    const timeEl = card.querySelector("p.font-bold");
+    const tempEl = card.querySelectorAll("p")[1];
+    const imgEl = card.querySelector("img");
+    
+    timeEl.innerHTML = '<div class="animate-pulse bg-gray-400 h-4 w-16 rounded"></div>';
+    tempEl.innerHTML = '<div class="animate-pulse bg-gray-400 h-4 w-12 rounded"></div>';
+    imgEl.style.opacity = "0.3";
+  });
+}
+
+// Hide loading state and show real data
+function hideLoadingState() {
+  const cards = document.querySelectorAll('[class*="bg-neutral-600"]');
+  cards.forEach(card => {
+    const timeEl = card.querySelector("p.font-bold");
+    const tempEl = card.querySelectorAll("p")[1];
+    const imgEl = card.querySelector("img");
+    
+    // Remove loading animations if they exist
+    const loadingDivs = card.querySelectorAll('.animate-pulse');
+    loadingDivs.forEach(div => div.remove());
+    
+    imgEl.style.opacity = "1";
+  });
+}
+
+// Update the updateForecast function to use loading states
+async function updateForecast(chosenDay) {
+  showLoadingState();
+  
+  try {
+    const latitude = weatherApp.currentLocation?.latitude || 52.52;
+    const longitude = weatherApp.currentLocation?.longitude || 13.41;
+    
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode&timezone=auto&forecast_days=7`
+    );
+    const data = await res.json();
+
+    // Rest of your existing updateForecast logic...
+    
+    hideLoadingState();
+  } catch (err) {
+    console.error(err);
+    hideLoadingState();
+    // Show error state
+    const cards = document.querySelectorAll('[class*="bg-neutral-600"]');
+    cards.forEach(card => {
+      const timeEl = card.querySelector("p.font-bold");
+      timeEl.textContent = "Error";
+      const tempEl = card.querySelectorAll("p")[1];
+      tempEl.textContent = "-";
+    });
+  }
+}
