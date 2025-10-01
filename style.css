@@ -33,6 +33,12 @@ header {
 .units {
   border-radius: 10px;
 }
+#unitsBtn{
+    background-color: rgba(48, 47, 74, 1);
+}
+#favBtn{
+    background-color: rgba(48, 47, 74, 1);
+}
 .relative {
   background-image: url(assets/images/bg-today-small.svg);
   background-repeat: no-repeat;
@@ -46,17 +52,25 @@ header {
 .forecast {
   background-color: rgba(38, 37, 64, 1);
 }
+.hour-drop{
+  background-color: rgba(48, 47, 74, 1);
+  border-radius:10px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
 .drop{
  background-color: rgba(48, 47, 74, 1);
   border-radius:10px;
 }
 #dayMenu{
-    background-color: rgba(38, 37, 64, 1);
-   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+   background: rgba(38, 37, 64, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    z-index: 1000;
+    margin-right: 15px;
 }
+
 /* TODAYS HIGHLIGHT SECTION */
 .humidity,
 .wind,
@@ -363,13 +377,13 @@ header {
 }
 @media (max-width: 360px){
   .logo{
-    width: 130px;
+    width: 100px;
   }
   #favBtn{
-     font-size:11px;
+     font-size:10px;
   }
   #unitsBtn{
-        font-size:11px;
+        font-size:10px;
   }
 }
 
@@ -423,7 +437,7 @@ header {
     margin-right: 15px;
   }
    .logo{
-    width: 150px;
+    width: 120px;
   }
   #favBtn{
      font-size:12px;
@@ -432,7 +446,11 @@ header {
         font-size:12px;
   }
 }
-
+@media screen and (min-width: 391px) and (max-width: 480px){
+  .logo{
+    width: 150px;
+  }
+}
 /* TO 480px */
 @media screen and (min-width: 332px) and (max-width: 480px) {
   body {
@@ -447,6 +465,7 @@ header {
     min-height: 100vh;
     margin: 0;
   }
+ 
   .dropdown {
     background: rgba(38, 37, 64, 0.7);
     backdrop-filter: blur(10px);

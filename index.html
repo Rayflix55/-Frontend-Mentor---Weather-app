@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
 <link rel="stylesheet" href="style.css">
    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+   <script src="https://kit.fontawesome.com/7401a24b2f.js" crossorigin="anonymous"></script>
   
   <title>Frontend Mentor | Weather app</title>
 
@@ -28,6 +29,7 @@
       <!-- Favorites Dropdown -->
       <div class="nav-d inline-block text-left">
         <button id="favBtn" class="bg-orange-500 p-2 rounded-lg flex items-center text-white cursor-pointer">
+          <i class="fa-solid fa-star-half-stroke"></i> &nbsp;
           Favorites
           &nbsp;
           <img src="./assets/images/icon-dropdown.svg" alt="reload" id="favIcon">
@@ -37,7 +39,7 @@
       <ul id="favMenu"
           class="dropdown absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl transform transition-all duration-300 origin-top scale-y-0 opacity-0 -translate-y-2 p-2">
           <p class="text-sm text-gray-600 px-2">Your Favorite Cities</p>
-          <div id="favList" class="max-h-60 overflow-y-auto"></div>
+          <div id="favList" class="max-h-60 overflow-y-auto text-white"></div>
           <hr class="my-2 border-gray-300">
           <button id="addFavBtn"
             class="w-full bg-blue-500 text-white py-1 rounded-md hover:bg-blue-600 transition">+ Add Current
@@ -48,6 +50,7 @@
       <!-- Units Dropdown -->
       <div class="inline-block text-left">
         <button id="unitsBtn" class="bg-blue-500 p-2 rounded-lg flex items-center text-white cursor-pointer">
+          <i class="fa-solid fa-gears"></i> &nbsp;
           <span id="selectedUnit">Units</span>
           &nbsp;
           <img src="./assets/images/icon-dropdown.svg" alt="" id="unitsIcon">
@@ -217,17 +220,24 @@
     <h2 class="text-xl font-bold text-orange-500">Hourly Forecast</h2>
 
     <!-- Day Selector Dropdown -->
-    <div class="hour-drop inline-block text-left">
-      <button id="dayBtn" class="drop p-2 rounded flex items-center text-white w-24 justify-between">
+    <div class="hour-drop inline-block text-center">
+      <button id="dayBtn" class="drop p-2 rounded flex items-center text-white w-34 justify-between cursor-pointer">
         <span id="selectedDay">Today</span>
         &nbsp;
         <img src="./assets/images/icon-dropdown.svg" alt="" id="dayIcon" class="w-4 h-4 transition-transform">
       </button>
 
-      <ul id="dayMenu"
-        class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl transform transition-all duration-300 origin-top scale-y-0 opacity-0 -translate-y-2 p-2 z-10">
-        <!-- Days injected via JS -->
-      </ul>
+    <ul id="dayMenu"
+    class=" absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl transform transition-all duration-300 origin-top scale-y-0 opacity-0 -translate-y-2 p-2">
+
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Thursday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Friday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Saturday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Sunday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Monday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Tuesday</li>
+    <li class="px-4 py-2 cursor-pointer hover:bg-blue-100">Wednesday</li>
+  </ul>
     </div>
   </div>
 

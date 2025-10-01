@@ -1383,4 +1383,161 @@ if ("webkitSpeechRecognition" in window) {
 
 
 
+// === Hourly Forecast Day Dropdown + Dynamic Cards (keeps styling intact) ===
+document.addEventListener("DOMContentLoaded", async () => {
+  const dayBtn = document.getElementById("dayBtn");
+  const dayMenu = document.getElementById("dayMenu");
+  const selectedDay = document.getElementById("selectedDay");
+  const dayIcon = document.getElementById("dayIcon");
+  const forecastHour = document.getElementById("forecastHour");
+
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const todayIndex = new Date().getDay();
+  const rotatedDays = [...days.slice(todayIndex), ...days.slice(0, todayIndex)];
+
+  dayMenu.innerHTML = rotatedDays
+    .map((day) => `<li class="px-4 py-2 cursor-pointer hover:bg-blue-100">${day}</li>`)
+    .join("");
+
+  selectedDay.textContent = rotatedDays[0];
+
+  // Weather icons map with default fallback
+    const weatherIcons = {
+      0: "assets/images/icon-sunny.webp",
+      1: "assets/images/icon-sunny.webp",
+      2: "assets/images/icon-partly-cloudy.webp",
+      3: "assets/images/icon-partly-cloudy.webp",
+      45: "assets/images/icon-fog.webp",
+      48: "assets/images/icon-fog.webp",
+      51: "assets/images/icon-drizzle.webp",
+      53: "assets/images/icon-drizzle.webp",
+      55: "assets/images/icon-rain.webp",
+      61: "assets/images/icon-rain.webp",
+      63: "assets/images/icon-rain.webp",
+      65: "assets/images/icon-storm.webp",
+      71: "assets/images/icon-snow.webp",
+      73: "assets/images/icon-snow.webp",
+      75: "assets/images/icon-snow.webp",
+      77: "assets/images/icon-snow.webp",
+      80: "assets/images/icon-rain.webp",
+      81: "assets/images/icon-rain.webp",
+      82: "assets/images/icon-rain.webp",
+      85: "assets/images/icon-snow.webp",
+      86: "assets/images/icon-snow.webp",
+      95: "assets/images/icon-storm.webp",
+      96: "assets/images/icon-storm.webp",
+      99: "assets/images/icon-storm.webp",
+      getIcon: function(code) {
+        return this[code] || "assets/images/icon-partly-cloudy.webp";
+      }
+    };
+
+  // Helper: format hour (e.g., 1 PM)
+  function hFormat(date) {
+    return date.toLocaleTimeString([], { hour: "numeric" });
+  }
+
+  // === Core function: update cards ===
+  async function updateForecast(chosenDay) {
+    try {
+      // Use weatherApp's current location if available, otherwise fallback to default
+      const latitude = weatherApp.currentLocation?.latitude || 52.52;
+      const longitude = weatherApp.currentLocation?.longitude || 13.41;
+      
+      const res = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode&timezone=auto&forecast_days=7`
+      );
+      const data = await res.json();
+
+      const today = new Date();
+      const offset = rotatedDays.indexOf(chosenDay);
+      const targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + offset);
+
+      const hours = data.hourly.time.map((t, i) => ({
+        date: new Date(t),
+        temp: data.hourly.temperature_2m[i],
+        code: data.hourly.weathercode[i],
+      }));
+
+      // Hours for the selected day (using full date comparison)
+      let dayHours = hours.filter(h => 
+        h.date.getFullYear() === targetDate.getFullYear() &&
+        h.date.getMonth() === targetDate.getMonth() &&
+        h.date.getDate() === targetDate.getDate()
+      );
+
+      // If today, start from next hour
+      if (offset === 0) {
+        const now = new Date();
+        dayHours = dayHours.filter(h => h.date.getHours() > now.getHours());
+      }
+
+      // Ensure we always have 8 hours of data
+      dayHours = dayHours.slice(0, 8);
+      while (dayHours.length < 8) {
+        dayHours.push({
+          date: new Date(targetDate),
+          temp: null,
+          code: 1
+        });
+      }
+      const cards = forecastHour.querySelectorAll('[class*="bg-neutral-600"]');
+      cards.forEach((card, i) => {
+        if (!dayHours[i]) return;
+
+        const timeEl = card.querySelector("p.font-bold");
+        timeEl.textContent = hFormat(dayHours[i].date);
+
+        const imgEl = card.querySelector("img");
+        imgEl.src = weatherIcons.getIcon(dayHours[i].code);
+        imgEl.alt = "Weather Icon";
+        imgEl.onerror = () => {
+          imgEl.src = "assets/images/icon-partly-cloudy.webp";
+        };
+
+        const tempEl = card.querySelectorAll("p")[1];
+        tempEl.textContent = `${Math.round(dayHours[i].temp)}°C`;
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Toggle dropdown
+  dayBtn.addEventListener("click", () => {
+    const isOpen = dayMenu.classList.contains("scale-y-100");
+    dayMenu.classList.toggle("scale-y-100", !isOpen);
+    dayMenu.classList.toggle("opacity-100", !isOpen);
+    dayMenu.classList.toggle("scale-y-0", isOpen);
+    dayMenu.classList.toggle("opacity-0", isOpen);
+    dayIcon.classList.toggle("rotate-180", !isOpen);
+  });
+
+  // Handle day selection
+  dayMenu.addEventListener("click", async (e) => {
+    if (e.target.tagName === "LI") {
+      const chosenDay = e.target.textContent;
+      selectedDay.textContent = chosenDay;
+
+      dayMenu.classList.remove("scale-y-100", "opacity-100");
+      dayMenu.classList.add("scale-y-0", "opacity-0");
+      dayIcon.classList.remove("rotate-180");
+
+      await updateForecast(chosenDay);
+    }
+  });
+
+  // Close dropdown if click outside
+  document.addEventListener("click", (e) => {
+    if (!dayBtn.contains(e.target) && !dayMenu.contains(e.target)) {
+      dayMenu.classList.remove("scale-y-100", "opacity-100");
+      dayMenu.classList.add("scale-y-0", "opacity-0");
+      dayIcon.classList.remove("rotate-180");
+    }
+  });
+
+  // 🔥 Auto-load today’s forecast on first load
+  await updateForecast(rotatedDays[0]);
+});
 
