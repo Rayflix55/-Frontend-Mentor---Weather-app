@@ -6,7 +6,7 @@ A fully responsive weather dashboard built as a **Frontend Mentor challenge** by
 
 ## 🌐 Live Site
 
-Coded by [Rayflix](https://rayflixthetechbro.vercel.app)
+Coded by [Rayflix](https://frontend-mentor-weather-app.vercel.app)
 
 ---
 
